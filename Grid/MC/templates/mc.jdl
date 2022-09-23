@@ -1,0 +1,67 @@
+
+User = "{{User}}";
+
+JobTag = { "{{JobTag}}" };
+
+Packages = { "{{Packages}}" };
+
+Executable = "{{Executable}}";
+
+InputFile = { {{InputFile}} };
+
+Split = "production:1-{{Split}}";
+
+SplitArguments = "env RUN=302000 SPLITID=#alien_counter# NTIMEFRAMES=20 NSIGEVENTS=25 NBKGEVENTS=25 ./runBeautyToJpsi_midy_pp_update_13.6TeV.sh --nevents 500";
+JDLPath = {{JDLPath}};
+JDLArguments      = "302000 0 110 0 0 0 0";
+JDLProcessor      = "alien.lpm.RunList";
+ValidationCommand = "/alice/cern.ch/user/a/aliprod/LHC21i1/validation.sh";
+OutputDir         = "/alice/sim/2021/LHC21i3f3/302000/#alien_counter_03i#";
+Output            = {
+    "logs*.zip@disk=2",
+    "AO2D*.root@disk=3",
+    "qc_archive.zip:QC/*.root@disk=2",
+    "qc_log_archive.zip:QC/*.log@disk=1",
+    "log_archive.zip:stderr,stdout,*.log,*.json,@disk=1",
+    "debug_log_archive*.tgz@disk=1",
+"analysis_archive.zip:AnalysisResults*.root,Analysis/*/AnalysisResults*.root@disk=1"
+};
+OutputErrorE = {
+    "logs*.zip@disk=2",
+    "log_archive.zip:stderr,stdout,*.log,*.json,@disk=1",
+    "qc_log_archive.zip:QC/*.log@disk=1",
+    "debug_log_archive*.tgz@disk=1"
+};
+Requirements =
+     ( member( other.Packages, "VO_ALICE@O2sim::v20220718-1" ) )
+  && ( member( other.GridPartitions, "multicore_8" ) )
+  && ( other.TTL > 82000 )
+  && ( other.Price <= 15 );
+OrigRequirements = member( other.GridPartitions, "multicore_8" );
+TTL              = 82000;
+Price            = 15.0;
+MemorySize       = "64GB";
+LPMChainID       = "257647";
+LPMJobTypeID     = "27314";
+JDLVariables     = {
+    "Packages",           "OutputDir",
+    "LPMAnchorPassName",  "MCAnchor",
+    "CollisionSystem",    "LPMMetaData",
+    "LPMRunNumber",       "LPMProductionType",
+    "LPMInteractionType", "LPMProductionTag",
+    "LPMJobTypeID",       "CPUCores"
+};
+LPMAnchorPassName = "pass2";
+MCAnchor          = "";
+CollisionSystem   = "p-p";
+LPMMetaData = "Packages=[VO_ALICE@O2sim::v20220718-1];OutputDir=/alice/sim/2021/LHC21i3f3/302000/#alien_counter_03i#;LPMAnchorPassName=pass2;MCAnchor=;CollisionSystem=p-p;LPMRunNumber=302000;LPMProductionType=MC;LPMInteractionType=pp;LPMProductionTag=LHC21i3f3;LPMJobTypeID=27314";
+LPMRunNumber       = "302000";
+LPMProductionType  = "MC";
+LPMInteractionType = "pp";
+LPMProductionTag   = "LHC21i3f3";
+CPUCores           = "8";
+PWG                = "COMMON";
+InputDataType      = "NONE";
+Activity           = "SIM";
+Type               = { {{Type}} };
+

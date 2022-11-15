@@ -4,7 +4,7 @@
 Script to plot the V0 performance plots
 """
 
-from ROOT import TFile, gPad, TH1, TLine, TF1
+from ROOT import TFile, gPad, TH1, TLine, TF1, TLegend
 from utils import draw_nice_canvas, draw_nice_label, draw_nice_frame
 import argparse
 
@@ -35,10 +35,10 @@ def main(fname, rebin=-1,
     dn = {"K0s": "qa-k0s-tracking-efficiency/Test/h_mass",
           "Lambda": "qa-k0s-tracking-efficiency/Lambda/h_mass",
           "AntiLambda": "qa-k0s-tracking-efficiency/AntiLambda/h_mass",
-          "XiPlus": "cascade-qa/hMassXiPlus",
-          "XiMinus": "cascade-qa/hMassXiMinus",
-          "OmegaMinus": "cascade-qa/hMassOmegaMinus",
-          "OmegaPlus": "cascade-qa/hMassOmegaPlus"}[particle]
+          "XiPlus": "cascade-analysis/h2dMassXiPlus",
+          "XiMinus": "cascade-analysis/h2dMassXiPlus",
+          "OmegaMinus": "cascade-analysis/h2dMassOmegaMinus",
+          "OmegaPlus": "cascade-analysis/h2dMassOmegaPlus"}[particle]
     particle_mass = {"K0s": 0.497614,
                      "Lambda": 1.115683, "AntiLambda": 1.115683,
                      "XiPlus": 1.32171, "XiMinus": 1.32171,
@@ -52,6 +52,8 @@ def main(fname, rebin=-1,
     h = f.Get(dn)
     h.SetDirectory(0)
     f.Close()
+    if "TH2" in h.ClassName():
+        h = h.ProjectionY()
     if rebin > 0:
         h.Rebin(rebin)
     h.SetBit(TH1.kNoStats)
@@ -79,6 +81,14 @@ def main(fname, rebin=-1,
     fbkg.SetLineColor(1)
     fbkg.SetLineStyle(2)
     fsum = TF1("fsum", f"gaus(0)+{bkg_function}(3)", *xrange)
+    leg = TLegend(0.19, 0.58, 0.35, 0.66)
+    leg.SetTextSize(0.025)
+    leg.SetBorderSize(0)
+    leg.SetLineColor(0)
+    # leg.SetFillColor(2)
+    leg.AddEntry(fsum, "Gaussian fit + pol. bkg.", "l")
+    leg.AddEntry(fbkg, "pol. bkg.", "l")
+
     h.Fit(fsig, "N", "", *fitrange)
     for i in range(fsig.GetNpar()):
         fsig_simple_bkg.SetParName(i, fsig.GetParName(i))
@@ -104,6 +114,7 @@ def main(fname, rebin=-1,
         fbkg.SetParameter(i, fsum.GetParameter(i+fsig.GetNpar()))
     fsum.Draw("same")
     fbkg.Draw("same")
+    leg.Draw()
     lines = []
     if 0:
         lines.append(TLine(particle_mass, h.GetMinimum(), particle_mass, h.GetMaximum()))
@@ -117,17 +128,19 @@ def main(fname, rebin=-1,
     label_y = 0.88
     label_x = 0.2
     draw_nice_label("ALICE Performance", label_x, label_y, s=0.04)
-    decay_channels = {"K0s": "#it{K}^{0}_{S} #rightarrow #pi^{+}#pi^{-}",
-                      "Lambda": "#Lambda #rightarrow p#pi^{-}",
+    decay_channels = {"K0s": "#it{K}^{0}_{S} #rightarrow #pi^{+}#pi^{#minus }",
+                      "Lambda": "#Lambda #rightarrow p#pi^{#minus }",
                       "AntiLambda": "#Lambda #rightarrow #bar{p}#pi^{+}",
                       "XiPlus": "#Xi^{+} #rightarrow #bar{#Lambda}#pi^{+} #rightarrow #bar{p}#pi^{+}#pi^{+}",
-                      "XiMinus": "#Xi^{-} #rightarrow #Lambda#pi^{-} #rightarrow p#pi^{-}#pi^{-}"}
-    for i in enumerate(["pp, Run 3 #sqrt{#it{s}} = 13.6 TeV", "0 < #it{p}_{T} < 10 GeV/#it{c}", "|y| < 0.5", decay_channels[particle]]):
+                      "XiMinus": "#Xi^{#minus} #rightarrow #Lambda#pi^{#minus } #rightarrow p#pi^{#minus }#pi^{#minus }",
+                      "OmegaMinus" :"",
+                      "OmegaPlus": ""}
+    for i in enumerate(["Run 3, pp #sqrt{#it{s}} = 13.6 TeV", "0 < #it{p}_{T} < 10 GeV/#it{c}", "|y| < 0.5", decay_channels[particle]]):
         draw_nice_label(i[1], label_x, label_y-0.044*(i[0]+1)-0.01, s=0.033)
     particle_symbol = {"Lambda": "#Lambda", "AntiLambda": "#bar{#Lambda}",
                        "K0s": "K^{0}_{S}",
-                       "XiPlus": "#Xi^{+}", "XiMinus": "#Xi^{-}",
-                       "OmegaPlus": "#bar{#Omega}^{+}", "OmegaMinus": "#Omega^{-}"}[particle]
+                       "XiPlus": "#Xi^{+}", "XiMinus": "#Xi^{#minus}",
+                       "OmegaPlus": "#bar{#Omega}^{+}", "OmegaMinus": "#Omega^{#minus }"}[particle]
     draw_nice_label(particle_symbol, 0.92, 0.92, s=0.07, align=33)
     if 0:
         for i in enumerate([tag, "Gaussian fit:",

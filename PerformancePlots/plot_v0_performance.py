@@ -19,8 +19,8 @@ def main(fname, rebin=-1,
     f = TFile(fname, "READ")
     # f.ls()
     xrange = {"K0s": [0.43, 0.54],
-              "Lambda": [1.101, 1.128],
-              "AntiLambda": [1.086, 1.14],
+              "Lambda": [1.1, 1.13],
+              "AntiLambda": [1.1, 1.13],
               "XiPlus": [1.29, 1.35],
               "XiMinus": [1.29, 1.35],
               "OmegaMinus": [1.62, 1.71],
@@ -133,7 +133,7 @@ def main(fname, rebin=-1,
                       "AntiLambda": "#Lambda #rightarrow #bar{p}#pi^{+}",
                       "XiPlus": "#Xi^{+} #rightarrow #bar{#Lambda}#pi^{+} #rightarrow #bar{p}#pi^{+}#pi^{+}",
                       "XiMinus": "#Xi^{#minus} #rightarrow #Lambda#pi^{#minus } #rightarrow p#pi^{#minus }#pi^{#minus }",
-                      "OmegaMinus" :"",
+                      "OmegaMinus": "",
                       "OmegaPlus": ""}
     for i in enumerate(["Run 3, pp #sqrt{#it{s}} = 13.6 TeV", "0 < #it{p}_{T} < 10 GeV/#it{c}", "|y| < 0.5", decay_channels[particle]]):
         draw_nice_label(i[1], label_x, label_y-0.044*(i[0]+1)-0.01, s=0.033)

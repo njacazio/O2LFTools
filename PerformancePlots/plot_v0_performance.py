@@ -36,7 +36,7 @@ def main(fname, rebin=-1,
           "Lambda": "qa-k0s-tracking-efficiency/Lambda/h_mass",
           "AntiLambda": "qa-k0s-tracking-efficiency/AntiLambda/h_mass",
           "XiPlus": "cascade-analysis/h2dMassXiPlus",
-          "XiMinus": "cascade-analysis/h2dMassXiPlus",
+          "XiMinus": "cascade-analysis/h2dMassXiMinus",
           "OmegaMinus": "cascade-analysis/h2dMassOmegaMinus",
           "OmegaPlus": "cascade-analysis/h2dMassOmegaPlus"}[particle]
     particle_mass = {"K0s": 0.497614,
@@ -53,6 +53,8 @@ def main(fname, rebin=-1,
     h.SetDirectory(0)
     f.Close()
     if "TH2" in h.ClassName():
+        draw_nice_canvas("2d")
+        h.DrawCopy("colz")
         h = h.ProjectionY()
     if rebin > 0:
         h.Rebin(rebin)

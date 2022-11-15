@@ -19,10 +19,10 @@ def main(fname, rebin=-1,
     f = TFile(fname, "READ")
     # f.ls()
     xrange = {"K0s": [0.43, 0.54],
-              "Lambda": [1.086, 1.14],
+              "Lambda": [1.101, 1.128],
               "AntiLambda": [1.086, 1.14],
-              "XiPlus": [1.26, 1.36],
-              "XiMinus": [1.26, 1.36],
+              "XiPlus": [1.29, 1.35],
+              "XiMinus": [1.29, 1.35],
               "OmegaMinus": [1.62, 1.71],
               "OmegaPlus": [1.62, 1.71]}[particle]
     fitrange = {"K0s": [0.48, 0.52],
@@ -45,6 +45,9 @@ def main(fname, rebin=-1,
                      "OmegaPlus": 1.672, "OmegaMinus": 1.672}[particle]
     print(xrange)
     print(dn)
+    if not f.Get(dn):
+        f.ls()
+        input("Did not find" + dn)
     f.Get(dn).ls()
     h = f.Get(dn)
     h.SetDirectory(0)
@@ -101,7 +104,9 @@ def main(fname, rebin=-1,
         fbkg.SetParameter(i, fsum.GetParameter(i+fsig.GetNpar()))
     fsum.Draw("same")
     fbkg.Draw("same")
-    lines = [TLine(particle_mass, h.GetMinimum(), particle_mass, h.GetMaximum())]
+    lines = []
+    if 0:
+        lines.append(TLine(particle_mass, h.GetMinimum(), particle_mass, h.GetMaximum()))
     if show_fit_range:
         lines.append(TLine(fitrange[0], h.GetMinimum(), fitrange[0], h.GetMaximum()))
         lines.append(TLine(fitrange[1], h.GetMinimum(), fitrange[1], h.GetMaximum()))
@@ -110,21 +115,31 @@ def main(fname, rebin=-1,
         i.Draw()
 
     label_y = 0.88
-    label_x = 0.18
-    # draw_nice_label("ALICE Performance", label_x, label_y, s=0.04)
+    label_x = 0.2
+    draw_nice_label("ALICE Performance", label_x, label_y, s=0.04)
+    decay_channels = {"K0s": "#it{K}^{0}_{S} #rightarrow #pi^{+}#pi^{-}",
+                      "Lambda": "#Lambda #rightarrow p#pi^{-}",
+                      "AntiLambda": "#Lambda #rightarrow #bar{p}#pi^{+}",
+                      "XiPlus": "#Xi^{+} #rightarrow #bar{#Lambda}#pi^{+} #rightarrow #bar{p}#pi^{+}#pi^{+}",
+                      "XiMinus": "#Xi^{-} #rightarrow #Lambda#pi^{-} #rightarrow p#pi^{-}#pi^{-}"}
+    for i in enumerate(["pp, Run 3 #sqrt{#it{s}} = 13.6 TeV", "0 < #it{p}_{T} < 10 GeV/#it{c}", "|y| < 0.5", decay_channels[particle]]):
+        draw_nice_label(i[1], label_x, label_y-0.044*(i[0]+1)-0.01, s=0.033)
     particle_symbol = {"Lambda": "#Lambda", "AntiLambda": "#bar{#Lambda}",
                        "K0s": "K^{0}_{S}",
                        "XiPlus": "#Xi^{+}", "XiMinus": "#Xi^{-}",
                        "OmegaPlus": "#bar{#Omega}^{+}", "OmegaMinus": "#Omega^{-}"}[particle]
-    draw_nice_label(particle_symbol, 0.92, 0.92, s=0.05, align=33)
-    for i in enumerate([tag, "Gaussian fit:",
-                        f"#mu = {fsum.GetParameter(1)*1000.0:.3f} #pm {fsum.GetParError(1)*1000.0:.3f} MeV/#it{{c}}^{{2}}",
-                        f"#sigma = {fsum.GetParameter(2)*1000.0:.3f} #pm {fsum.GetParError(2)*1000.0:.3f} MeV/#it{{c}}^{{2}}"]):
-        draw_nice_label(i[1], label_x, label_y - 0.04*(i[0]+1), s=0.03)
+    draw_nice_label(particle_symbol, 0.92, 0.92, s=0.07, align=33)
+    if 0:
+        for i in enumerate([tag, "Gaussian fit:",
+                            f"#mu = {fsum.GetParameter(1)*1000.0:.3f} #pm {fsum.GetParError(1)*1000.0:.3f} MeV/#it{{c}}^{{2}}",
+                            f"#sigma = {fsum.GetParameter(2)*1000.0:.3f} #pm {fsum.GetParError(2)*1000.0:.3f} MeV/#it{{c}}^{{2}}"]):
+            draw_nice_label(i[1], label_x, label_y - 0.04*(i[0]+1), s=0.03)
     gPad.Modified()
     gPad.Update()
     input("Press enter to continue")
     can.SaveAs(f"/tmp/v0s{particle}.png")
+    can.SaveAs(f"/tmp/v0s{particle}.pdf")
+    can.SaveAs(f"/tmp/v0s{particle}.eps")
 
 
 if __name__ == "__main__":

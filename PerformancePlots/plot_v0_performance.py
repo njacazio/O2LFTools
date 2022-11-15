@@ -32,9 +32,9 @@ def main(fname, rebin=-1,
                 "XiMinus": [1.31, 1.33],
                 "OmegaMinus": [1.66, 1.68],
                 "OmegaPlus": [1.66, 1.68]}[particle]
-    dn = {"K0s": "qa-k0s-tracking-efficiency/Test/h_mass",
-          "Lambda": "qa-k0s-tracking-efficiency/Lambda/h_mass",
-          "AntiLambda": "qa-k0s-tracking-efficiency/AntiLambda/h_mass",
+    dn = {"K0s": "lambdakzero-analysis/h3dMassK0Short",
+          "Lambda": "lambdakzero-analysis/h3dMassLambda",
+          "AntiLambda": "lambdakzero-analysis/h3dMassAntiLambda",
           "XiPlus": "cascade-analysis/h2dMassXiPlus",
           "XiMinus": "cascade-analysis/h2dMassXiMinus",
           "OmegaMinus": "cascade-analysis/h2dMassOmegaMinus",
@@ -55,7 +55,15 @@ def main(fname, rebin=-1,
     if "TH2" in h.ClassName():
         draw_nice_canvas("2d")
         h.DrawCopy("colz")
+        gPad.Modified()
+        gPad.Update()
         h = h.ProjectionY()
+    if "TH3" in h.ClassName():
+        draw_nice_canvas("3d")
+        h.DrawCopy()
+        gPad.Modified()
+        gPad.Update()
+        h = h.Project3D("z")
     if rebin > 0:
         h.Rebin(rebin)
     h.SetBit(TH1.kNoStats)
@@ -76,7 +84,7 @@ def main(fname, rebin=-1,
     fsig = TF1("fsig", "gaus", *xrange)
     fsig.SetParameter(1, particle_mass)
     fsig.SetParLimits(1, particle_mass+0.1, particle_mass-0.1)
-    fsig_simple_bkg = TF1("fsig_simple_bkg", "gaus(0)+pol0(3)", *xrange)
+    fsig_simple_bkg = TF1("fsig_simple_bkg", "gaus(0)+pol0({})".format(fsig.GetNpar()+1), *xrange)
     fsig_simple_bkg.SetLineColor(3)
     fsig_simple_bkg.SetLineStyle(2)
     fbkg = TF1("fbkg", f"{bkg_function}", *xrange)
@@ -130,14 +138,14 @@ def main(fname, rebin=-1,
     label_y = 0.88
     label_x = 0.2
     draw_nice_label("ALICE Performance", label_x, label_y, s=0.04)
-    decay_channels = {"K0s": "#it{K}^{0}_{S} #rightarrow #pi^{+}#pi^{#minus }",
+    decay_channels = {"K0s": "K^{0}_{S} #rightarrow #pi^{+}#pi^{#minus }",
                       "Lambda": "#Lambda #rightarrow p#pi^{#minus }",
-                      "AntiLambda": "#Lambda #rightarrow #bar{p}#pi^{+}",
+                      "AntiLambda": "#bar{#Lambda} #rightarrow #bar{p}#pi^{+}",
                       "XiPlus": "#Xi^{+} #rightarrow #bar{#Lambda}#pi^{+} #rightarrow #bar{p}#pi^{+}#pi^{+}",
                       "XiMinus": "#Xi^{#minus} #rightarrow #Lambda#pi^{#minus } #rightarrow p#pi^{#minus }#pi^{#minus }",
-                      "OmegaMinus": "",
-                      "OmegaPlus": ""}
-    for i in enumerate(["Run 3, pp #sqrt{#it{s}} = 13.6 TeV", "0 < #it{p}_{T} < 10 GeV/#it{c}", "|y| < 0.5", decay_channels[particle]]):
+                      "OmegaMinus": "#Omega^{#minus}",
+                      "OmegaPlus": "#bar{#Omega}^{+}"}
+    for i in enumerate(["Run 3, pp #sqrt{#it{s}} = 13.6 TeV", "0 < #it{p}_{T} < 10 GeV/#it{c}", "|#it{y}| < 0.5", decay_channels[particle]]):
         draw_nice_label(i[1], label_x, label_y-0.044*(i[0]+1)-0.01, s=0.033)
     particle_symbol = {"Lambda": "#Lambda", "AntiLambda": "#bar{#Lambda}",
                        "K0s": "K^{0}_{S}",

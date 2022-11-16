@@ -34,7 +34,9 @@ def draw_tofmass(h,
                  logy=True,
                  label_size=0.033,
                  x=1,
+                 ymin=None,
                  rebin=4,
+                 
                  xrange=[0, 3],
                  label="",
                  energylabel="Run 3, pp #sqrt{#it{s}} = 900 GeV",
@@ -49,6 +51,8 @@ def draw_tofmass(h,
     can = draw_nice_canvas("TOFmass", logx=False, logy=True)
     y = [1, h.GetMaximum()*2]
     y = [1, h.GetMaximum()*4]
+    if ymin is not None:
+        y = [ymin, y[1]]
     frame = draw_nice_frame(can, xrange,
                             y, h,
                             "Counts")
@@ -99,10 +103,12 @@ def draw_tofmass(h,
     return h, latex
 
 
-def main(filename, tag):
-    mass = get_for_tofmass(filename, tag="apass3", subdir="EvTimeTOF")
+def main(filename, tag, ymin, xrange):
+    mass = get_for_tofmass(filename, tag=tag, subdir="EvTimeTOF")
     d = draw_tofmass(mass, saveas="/tmp/TOFMass.pdf",
                      rebin=6,
+                     ymin=ymin,
+                     xrange=xrange,
                      energylabel="Run 3, pp #sqrt{#it{s}} = 13.6 TeV")
     input("Press Enter to continue...")
 
@@ -121,6 +127,10 @@ if __name__ == "__main__":
                         help="Particle type.")
     parser.add_argument("--charges", "-c", type=str, nargs="+", default=["Pos"],
                         help="Particle charge.")
+    parser.add_argument("--ymin", "-y", type=float, default=None,
+                        help="Start y range of the plot.")
+    parser.add_argument("--xrange", "-x", type=float, nargs=2, default=[0, 2.5],
+                        help="Start x range of the plot.")
 
     args = parser.parse_args()
-    main(args.data_file, args.tag)
+    main(args.data_file, args.tag, ymin=args.ymin, xrange=args.xrange)

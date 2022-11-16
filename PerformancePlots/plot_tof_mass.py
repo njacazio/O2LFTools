@@ -36,7 +36,6 @@ def draw_tofmass(h,
                  x=1,
                  ymin=None,
                  rebin=4,
-                 
                  xrange=[0, 3],
                  label="",
                  energylabel="Run 3, pp #sqrt{#it{s}} = 900 GeV",

@@ -103,9 +103,9 @@ def draw_tofmass(h,
     return h, latex
 
 
-def main(filename, tag, ymin, xrange):
+def main(filename, tag, ymin, xrange, format):
     mass = get_for_tofmass(filename, tag=tag, subdir="EvTimeTOF")
-    d = draw_tofmass(mass, saveas="/tmp/TOFMass.pdf",
+    d = draw_tofmass(mass, saveas="/tmp/TOFMass."+format,
                      rebin=6,
                      ymin=ymin,
                      xrange=xrange,
@@ -131,6 +131,8 @@ if __name__ == "__main__":
                         help="Start y range of the plot.")
     parser.add_argument("--xrange", "-x", type=float, nargs=2, default=[0, 2.5],
                         help="Start x range of the plot.")
+    parser.add_argument("--format", "-f", type=str, default="pdf",
+                        help="Output format for the plot.")
 
     args = parser.parse_args()
-    main(args.data_file, args.tag, ymin=args.ymin, xrange=args.xrange)
+    main(args.data_file, args.tag, ymin=args.ymin, xrange=args.xrange, format=args.format)

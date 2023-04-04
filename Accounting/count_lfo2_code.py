@@ -16,7 +16,7 @@ def run_cmd(cmd, verbose=False):
     return output
 
 
-def main(path_to_o2physics, last_modified=False, check_if_datamodel=True, show_authors=False, check_if_produces_table=True):
+def main(path_to_o2physics, last_modified=False, check_if_datamodel=False, show_authors=False, check_if_produces_table=False):
     lp = os.path.join(os.path.normpath(os.path.expanduser(path_to_o2physics)), "O2Physics/PWGLF")
     os.chdir(lp)
     list_of_files = {}
@@ -185,5 +185,6 @@ if __name__ == "__main__":
     paser.add_argument("o2physics_path", help="Path to O2Physics")
     paser.add_argument("--last_modified", action="store_true", help="Last modified instead of first added")
     paser.add_argument("--check_if_datamodel", action="store_true", help="Check if there is a DECLARE_SOA_TABLE")
+    paser.add_argument("--check_if_produces", action="store_true", help="Check if a file produces a table")
     args = paser.parse_args()
-    main(path_to_o2physics=args.o2physics_path, last_modified=args.last_modified, check_if_datamodel=args.check_if_datamodel)
+    main(path_to_o2physics=args.o2physics_path, last_modified=args.last_modified, check_if_datamodel=args.check_if_datamodel, check_if_produces_table=args.check_if_produces)

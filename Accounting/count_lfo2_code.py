@@ -16,8 +16,8 @@ def run_cmd(cmd, verbose=False):
     return output
 
 
-def main(path_to_o2physics, last_modified=False, check_if_datamodel=False, show_authors=False, check_if_produces_table=False):
-    lp = os.path.join(os.path.normpath(os.path.expanduser(path_to_o2physics)), "O2Physics/PWGLF")
+def main(path_to_o2physics, last_modified=False, check_if_datamodel=False, show_authors=False, check_if_produces_table=False, subdir="PWGLF"):
+    lp = os.path.join(os.path.normpath(os.path.expanduser(path_to_o2physics)), os.path.join("O2Physics", subdir))
     os.chdir(lp)
     list_of_files = {}
     available_dirs = []
@@ -187,9 +187,13 @@ if __name__ == "__main__":
     paser.add_argument("--check_if_datamodel", action="store_true", help="Check if there is a DECLARE_SOA_TABLE")
     paser.add_argument("--check_if_produces", action="store_true", help="Check if a file produces a table")
     paser.add_argument("--show_authors", action="store_true", help="Check file authors")
+    paser.add_argument("--subdir", "-s", choices=["ALICE3", "DPG", "EventFiltering", "PWGCF",
+                       "PWGDQ", "PWGEM", "PWGHF", "PWGJE", "PWGLF", "PWGMM", "PWGUD"],
+                       help="Subdir file authors")
     args = paser.parse_args()
     main(path_to_o2physics=args.o2physics_path,
          last_modified=args.last_modified,
          check_if_datamodel=args.check_if_datamodel,
          show_authors=args.show_authors,
+         subdir=args.subdir,
          check_if_produces_table=args.check_if_produces)

@@ -186,5 +186,10 @@ if __name__ == "__main__":
     paser.add_argument("--last_modified", action="store_true", help="Last modified instead of first added")
     paser.add_argument("--check_if_datamodel", action="store_true", help="Check if there is a DECLARE_SOA_TABLE")
     paser.add_argument("--check_if_produces", action="store_true", help="Check if a file produces a table")
+    paser.add_argument("--show_authors", action="store_true", help="Check file authors")
     args = paser.parse_args()
-    main(path_to_o2physics=args.o2physics_path, last_modified=args.last_modified, check_if_datamodel=args.check_if_datamodel, check_if_produces_table=args.check_if_produces)
+    main(path_to_o2physics=args.o2physics_path,
+         last_modified=args.last_modified,
+         check_if_datamodel=args.check_if_datamodel,
+         show_authors=args.show_authors,
+         check_if_produces_table=args.check_if_produces)

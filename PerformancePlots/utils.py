@@ -7,6 +7,8 @@ nice_labels = []
 
 
 def draw_nice_label(l, x=0.7, y=0.5, s=0.035, yd=0, align=11):
+    if type(l) is not str:
+        raise ValueError(f"Label {l} must be a string, but is a type {type(l)}")
     latex = TLatex(x, y+yd, l)
     latex.SetNDC()
     latex.SetTextFont(42)

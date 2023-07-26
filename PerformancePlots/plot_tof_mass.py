@@ -5,24 +5,32 @@ Script to plot the TOF mass distribution
 """
 
 from ROOT import TFile, TCanvas, TLatex, TNamed, TH1
-import argparse
+from logmaker import *
 from utils import draw_nice_canvas, draw_nice_frame
 
 
-def get_for_tofmass(filename, tag=None, subdir=None):
+def get_for_tofmass(filename, tag=None):
     f = TFile(filename, "READ")
 #     f.ls()
     hn = f"tof-pid-collision-time-qa/withtof/mass"
+    hn = "tof-pid-beta-qa/event/tofmass"
+    hn = "tof-pid-beta-qa/tofmass/inclusive"
+    hn = "tof-pid-beta-qa/tofmass/notrd/inclusive"
+    hn = "tof-pid-beta-qa/tofmass/trd/inclusive"
 
-    if subdir is not None:
-        hn = f"tof-pid-collision-time-qa/{subdir}/mass"
-    if not f.Get(hn):
-        f.Get("tof-pid-beta-qa/event").ls()
-        hn = f"tof-pid-beta-qa/event/tofmass{subdir}"
-        f.ls()
+    # if subdir is not None:
+    #     hn = f"tof-pid-collision-time-qa/{subdir}/mass"
+    # if not f.Get(hn):
+    #     f.Get("tof-pid-beta-qa/event").ls()
+    #     hn = f"tof-pid-beta-qa/event/tofmass{subdir}"
+    #     f.ls()
+    print("Using", hn)
     h = f.Get(hn)
     h.SetDirectory(0)
     f.Close()
+    if "TH2" in h.ClassName():
+        h.GetXaxis().SetRangeUser(0.5, 10)
+        h = h.ProjectionY()
     if tag is not None:
         h.GetListOfFunctions().Add(TNamed(tag, tag))
     return h
@@ -102,22 +110,18 @@ def draw_tofmass(h,
     return h, latex
 
 
-def main(filename, tag, ymin, xrange):
-    mass = get_for_tofmass(filename, tag=tag, subdir="EvTimeTOF")
+def main(filename, tag, ymin, xrange, label):
+    mass = get_for_tofmass(filename, tag=tag)
     d = draw_tofmass(mass, saveas="/tmp/TOFMass.pdf",
-                     rebin=6,
+                     rebin=2,
                      ymin=ymin,
                      xrange=xrange,
-                     energylabel="Run 3, pp #sqrt{#it{s}} = 13.6 TeV")
+                     energylabel=label)
     input("Press Enter to continue...")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--verbose", "-v",
-                        action="store_true", help="Verbose mode.")
-    parser.add_argument("-b",
-                        action="store_true", help="Background mode.")
+    parser = get_default_parser(description=__doc__)
     parser.add_argument("data_file", type=str,
                         help="Input file for the data")
     parser.add_argument("--tag", type=str, default="",
@@ -130,6 +134,7 @@ if __name__ == "__main__":
                         help="Start y range of the plot.")
     parser.add_argument("--xrange", "-x", type=float, nargs=2, default=[0, 2.5],
                         help="Start x range of the plot.")
+    parser.add_argument("--label", "-l", default="Run 3, pp #sqrt{#it{s}} = 13.6 TeV", help="Label in drawing")
 
-    args = parser.parse_args()
-    main(args.data_file, args.tag, ymin=args.ymin, xrange=args.xrange)
+    args = parse_default_args()
+    main(args.data_file, tag=args.tag, ymin=args.ymin, xrange=args.xrange, label=args.label)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from ROOT import TCanvas, TLegend, TLine, TLatex
+from ROOT import TCanvas, TLegend, TLine, TLatex, TH1
 
 
 nice_labels = []
@@ -71,6 +71,8 @@ def draw_nice_frame(c, x, y, xt, yt):
     if not type(yt) is str:
         yt = yt.GetYaxis().GetTitle()
     frame = c.DrawFrame(x[0], y[0], x[1], y[1], f";{xt};{yt}")
+    frame.SetBit(TH1.kNoStats)
+    frame.SetBit(TH1.kNoTitle)
     frame.GetYaxis().SetTitleSize(0.04)
     frame.GetXaxis().SetTitleSize(0.04)
     frame.GetXaxis().SetTitleOffset(1.25)

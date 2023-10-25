@@ -3,22 +3,13 @@
 """
 Script to download from the path of merged AnalysisResults the corresponding results for the single runs.
 It can be used by providing the path on alien of the merged results.
-Example usage: `./download_per_run.py /alice/cern.ch/user/a/alihyperloop/outputs/38641/4474`
+Example usage: `./download_per_run.py TRAIN_ID`
 """
 
 import subprocess
 from os import path
-try:
-    from bs4 import BeautifulSoup
-except:
-    raise Exception(
-        "Cannot find bs4, consider running `pip3 install --user beautifulsoup4`")
-try:
-    import lxml
-except:
-    raise Exception(
-        "Cannot find lxml, consider running `pip3 install --user lxml`")
 import os
+import json
 import argparse
 try:
     from ROOT import TFile
@@ -35,8 +26,8 @@ import sys
 import inspect
 
 # Modes
-verbose_mode = False
-dry_mode = False
+VERBOSE_MODE = False
+DRY_MODE_RUNNING = False
 
 
 class bcolors:
@@ -56,7 +47,7 @@ class bcolors:
 
 
 def vmsg(*args, color=bcolors.OKBLUE):
-    if verbose_mode:
+    if VERBOSE_MODE:
         print("** ", color, *args, bcolors.ENDC)
 
 
@@ -69,211 +60,147 @@ def fatal_msg(*args, fatal_message="Fatal Error!"):
     raise RuntimeError(fatal_message)
 
 
-def copy_from_alien(in_path,
-                    file_name,
-                    out_path,
-                    preserve_structure=False,
-                    overwrite=False,
-                    tag=None):
-    in_path = in_path.replace("alien://", "")
-    out_path = path.abspath(out_path)
-    if file_name is None:
+def run_cmd(cmd):
+    vmsg("Running command:", f"`{cmd}`")
+    cmd = cmd.split()
+    if DRY_MODE_RUNNING:
+        msg("Dry mode!!!")
+        return
+    if "capture_output" in inspect.signature(subprocess.run).parameters:
+        # Python 3.7+
+        run_result = subprocess.run(cmd, capture_output=not VERBOSE_MODE)
+    else:
+        run_result = subprocess.run(cmd)
+    vmsg(run_result)
+    return run_result
+
+
+class HyperloopOutput:
+    def __init__(self,
+                 json_entry,
+                 out_path="/tmp/"):
+        self.alien_path = json_entry["outputdir"] + "/AnalysisResults.root"
+        if "run" in json_entry:
+            self.run_number = json_entry["run"]
+        else:
+            self.run_number = None
+        self.out_path = path.abspath(out_path)
+
+    def get_alien_path(self):
+        if "alien://" in self.alien_path:
+            raise RuntimeError(f"Path {self.alien_path} is already an alien path")
+        return "alien://" + self.alien_path
+
+    def local_file_position(self):
+        return self.alien_path.replace("alien://", "")
+
+    def get_run(self):
+        return self.run_number
+
+    def out_filename(self):
+        in_path = self.alien_path
         file_name = path.basename(in_path)
-        in_path = path.dirname(in_path)
-    if preserve_structure:
-        vmsg("Preserving path structure in download")
-        out_path = path.join(out_path, in_path.strip("/"))
+        dir_name = path.dirname(in_path)
+        return path.join(self.out_path, dir_name.strip("/"), file_name)
+
+    def exists(self):
+        f = self.out_filename()
+        check = path.isfile(f)
+        if check:
+            vmsg("File", f"`{f}`", "already existing")
+            return True
+        vmsg("File", f"`{f}`", "not existing")
+        return False
+
+    def is_sane(self, throw_fatal=True):
+        if not self.exists():
+            return False
+        f = self.out_filename()
+        try:
+            f = TFile.Open(f)
+        except:
+            if throw_fatal:
+                fatal_msg("Cannot open", f)
+            return False
+        vmsg("File", f"`{f}`", "is sane")
+        return True
+
+    def copy_from_alien(self,
+                        write_download_summary=True,
+                        overwrite=False,
+                        overwrite_summary=True):
+        out_path = path.dirname(self.out_filename())
         if not path.isdir(out_path):
             vmsg("Preparing directory", f"`{out_path}`")
             os.makedirs(out_path)
-    out_file = path.join(out_path, file_name)
-    if tag is not None:
-        tag = tag.strip()
-        if tag == "":
-            fatal_msg("Emtpy tag, nothing to do.")
-        if not tag.startswith("_"):
-            tag = f"_{tag}"
-        new_name = [path.dirname(file_name),
-                    path.basename(file_name)]
-        new_name[1] = f"{tag}.".join(new_name[1].rsplit(".", 1))
-        new_name = path.join(*new_name)
-        msg("Tagging", file_name, "with tag", tag, "to", new_name)
-        out_file = path.join(out_path, new_name)
-
-    if path.isfile(out_file):
-        if not overwrite:
-            if check_sanity(out_file, throw_fatal=False):
-                msg("File", f"`{out_file}`",
+        else:
+            vmsg("Directory", f"`{out_path}`", "already present")
+        if write_download_summary and (overwrite_summary or not path.isfile(path.join(out_path, "download_summary.txt"))):
+            with open(path.join(out_path, "download_summary.txt"), "w") as f:
+                f.write(self.get_alien_path() + "\n")
+                f.write(f"Run{self.get_run()}\n")
+        if not overwrite and self.exists():
+            if self.is_sane():
+                msg("File", f"`{self.out_filename()}`",
                     "already present, skipping for download")
-                return out_file
+                return self.out_filename()
             else:
-                os.remove(out_file)
-                msg("File", out_file, "was not sane, removing it and attempting second download", color=bcolors.BWARNING)
+                os.remove(self.out_filename())
+                msg("File", self.out_filename(), "was not sane, removing it and attempting second download", color=bcolors.BWARNING)
 
-        else:
-            n = 0
-            new_name = file_name.rsplit('.', 1)
-            for revision in os.listdir(out_path):
-                if revision.startswith(new_name[0]):
-                    n += 1
-            new_name = f"_Rev{n}.".join(new_name)
-            new_name = out_file.replace(file_name, new_name)
-            os.rename(out_file, new_name)
-            msg("File", f"`{out_file}`",
-                "already present, renaming it to", new_name)
-    full_path = path.join(in_path, file_name)
-    msg("Downloading", full_path)
-    cmd = f"alien_cp -q alien://{full_path} file:{out_file}"
-    vmsg("Running:", f"`{cmd}`")
-    if not dry_mode:
-        cmd = cmd.split()
-        if "capture_output" in inspect.signature(subprocess.run).parameters:
-            # Python 3.7+
-            run_result = subprocess.run(cmd, capture_output=not verbose_mode)
-        else:
-            run_result = subprocess.run(cmd)
-    return out_file
+        msg("Downloading", self.get_alien_path(), "to", self.out_filename())
+        cmd = f"alien_cp -q {self.get_alien_path()} file:{self.out_filename()}"
+        run_cmd(cmd)
 
 
-def check_sanity(file_name, throw_fatal=True):
-    try:
-        f = TFile.Open(file_name)
-    except:
-        if throw_fatal:
-            fatal_msg("Cannot open", file_name)
-        return False
-    return True
-
-
-def get_run_per_run_files(alien_path="/alice/cern.ch/user/a/alihyperloop/outputs/35071/4143",
-                          xml_name="Stage_1.xml",
-                          out_path="/tmp/"):
-    overwrite_xml = True
-    if path.isfile(path.join(out_path, xml_name)):
-        with open(path.join(out_path, xml_name)) as f:
-            for i in f:
-                if alien_path in i:
-                    overwrite_xml = False
-                    break
-
-    copy_from_alien(alien_path, xml_name, out_path, overwrite=overwrite_xml)
-
-    with open(path.join(out_path, xml_name), "r") as f:
-        data = f.read()
-    Bs_data = BeautifulSoup(data, "xml")
-    b_file = Bs_data.find_all('file')
+def get_run_per_run_files(train_id=126264,
+                          alien_path="https://alimonitor.cern.ch/alihyperloop-data/trains/train.jsp?train_id=",
+                          out_path="/tmp/",
+                          list_meged_files=False):
+    out_name = path.join(out_path, f"HyperloopID_{train_id}.json")
+    if not path.isfile(out_name):
+        download_cmd = f"curl --key /tmp/tokenkey_1000.pem --cert /tmp/tokencert_1000.pem --insecure {alien_path}{train_id} -o {out_name}"
+        run_cmd(download_cmd)
     sub_file_list = []
-    for i in b_file:
-        sub = i.get("turl")
-        vmsg("Add", f"`{sub}`", "to the list of files to download")
-        sub_file_list.append(sub)
+    with open(out_name) as json_data:
+        data = json.load(json_data)
+        if list_meged_files:
+            to_list = data["mergeResults"]
+        else:
+            to_list = data["jobResults"]
+        for i in to_list:
+            sub_file_list.append(HyperloopOutput(i, out_path=out_path))
     msg("Found", len(sub_file_list), "files to download")
     return sub_file_list
 
 
-def main(merged_output_alien_path="/alice/cern.ch/user/a/alihyperloop/outputs/35071/4143",
+def main(hyperloop_train_id=126264,
          out_path="/tmp/",
          overwrite=False,
-         organize_based_on_run_number=False,
          tag=None,
-         no_explicit_pass=False,
          download_merged=False):
-    # Getting input for merged file
-    l = get_run_per_run_files(alien_path=merged_output_alien_path,
-                              out_path=out_path)
-    
-    # Downloading files run per run
-    def do_download(full_path):
-        return copy_from_alien(full_path,
-                               file_name=None,
-                               out_path=out_path,
-                               preserve_structure=True,
-                               overwrite=overwrite,
-                               tag=tag)
+    # Getting input for single
+    l = get_run_per_run_files(train_id=hyperloop_train_id,
+                              out_path=out_path,
+                              list_meged_files=download_merged)
+
     downloaded = []
-
-    if organize_based_on_run_number:
-        print("\n!!! BEWARE: be sure that the package \"tdqm\" is loaded!\n")
-
     if "tqdm" in sys.modules:
         for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
-            downloaded.append(do_download(i))
-            if organize_based_on_run_number:
-                do_download("/".join(i.split("/")[:-1])+"/analysis.xml")
+            downloaded.append(i.copy_from_alien(overwrite=overwrite))
     else:
         for i in l:
-            downloaded.append(do_download(i))
-
-    # Download merged output file
-    if download_merged:
-        merged = merged_output_alien_path + "/AnalysisResults.root"
-        msg("\nDownloading merged output ", merged)
-        copy_from_alien(in_path=merged, file_name=None, out_path=out_path)
-        merged = out_path + "AnalysisResults.root"
-        cmd = f"mv {merged} {out_path}/AnalysisResults_full_stat.root"
-        vmsg("Running:", f"`{cmd}`")
-        cmd = cmd.split()
-        if "capture_output" in inspect.signature(subprocess.run).parameters:
-            # Python 3.7+
-            run_result = subprocess.run(cmd, capture_output=not verbose_mode)
-        else:
-            run_result = subprocess.run(cmd)
-
-    # Checking
-    for i in downloaded:
-        check_sanity(i)
-    msg("You can find the", len(downloaded), "downloaded files in", out_path)
-    for i in downloaded:
-        msg("        ", i)
-    if organize_based_on_run_number:
-        msg("Organizing files based on run number")
-        linked = []
-        for d in downloaded:
-            anaxml = "/".join(d.split("/")[:-1])+"/analysis.xml"
-            with open(path.join(out_path, anaxml), "r") as f:
-                data = f.read()
-                Bs_data = BeautifulSoup(data, "xml")
-                for i in Bs_data.find_all('file'):
-                    i = i.get("turl")
-                    i = i.replace("alien:///", "")
-                    apassindex = -1
-                    for j in enumerate(i.split("/")):
-                        if "apass" in j[1]:
-                            apassindex = j[0]
-                            break
-                        if "cpass" in j[1]:
-                            apassindex = j[0]
-                            break
-                    if no_explicit_pass:
-                        msg("BEWARE: no explicit apass/cpass in the output paths")
-                    else:
-                        if apassindex < 0:
-                            fatal_msg("Try option -np: cannot find apass/cpass in", i)
-                        i = "/".join(i.split("/")[:apassindex+1])
-                    i = os.path.join(out_path, "run_organized", i)
-                    if not os.path.isdir(i):
-                        msg("Making directory", i)
-                        os.makedirs(i)
-                    target = os.path.join(i, os.path.basename(d))
-                    linked.append(target)
-                    if os.path.isfile(target):
-                        break
-                    msg("Linking", d, "to", target)
-                    os.link(d, target)
-                    break
-                # b_file = Bs_data.find_all('file')
-        return linked
+            downloaded.append(i.copy_from_alien(overwrite=overwrite))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("input_path", help="Input path to look for in grid. One can use e.g. `/alice/cern.ch/user/a/alihyperloop/outputs/38641/4474`. This path can be found e.g. in https://alimonitor.cern.ch/hyperloop/train-run/38641 under the tab `Merged Output`. It is the path of the merged analysis results")
+    parser.add_argument("hyperloop_train_id",
+                        help="Train ID to consider",
+                        type=int)
     parser.add_argument("--out_path", "-o",
                         default="/tmp/",
                         help="Output path where the download will be located. Default: `/tmp/`")
-    parser.add_argument("--xml_file", "-x",
-                        default="Stage_1.xml",
-                        help="Name of the file used for merge. Default: `Stage_1.xml`")
     parser.add_argument("--verbose", "-v",
                         action="store_true",
                         help="Name of the file used for merge. Default: `Stage_1.xml`")
@@ -286,24 +213,16 @@ if __name__ == "__main__":
     parser.add_argument("--tag", "-t",
                         default=None,
                         help="Tag to use to mark the downloaded files. Default: `None`")
-    parser.add_argument("--look_for_run_number", "-r",
-                        action="store_true",
-                        help="Flag to look for the run number of the downloaded files and rename the path accordingly. Default: `False`")
-    parser.add_argument("--no_pass", "-np",
-                        action="store_true",
-                        help="Flag to disable the research of apass/cpass in the Hyperloop output files. Default: `False`")
     parser.add_argument("--download_merged", "-m",
                         action="store_true",
                         help="Flag to enable the download of the merged output file. Default: `False`")
     args = parser.parse_args()
     if args.verbose:
-        verbose_mode = True
+        VERBOSE_MODE = True
     if args.drymode:
-        dry_mode = True
-    main(merged_output_alien_path=args.input_path,
+        DRY_MODE_RUNNING = True
+    main(hyperloop_train_id=args.hyperloop_train_id,
          out_path=args.out_path,
          overwrite=args.overwrite,
-         organize_based_on_run_number=args.look_for_run_number,
          tag=args.tag,
-         no_explicit_pass=args.no_pass,
          download_merged=args.download_merged)

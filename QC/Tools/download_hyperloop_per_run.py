@@ -12,7 +12,7 @@ import os
 import json
 import argparse
 try:
-    from ROOT import TFile
+    from ROOT import TFile, TH1
 except:
     raise Exception("Cannot find ROOT, are you in a ROOT enviroment?")
 
@@ -24,6 +24,7 @@ except ImportError as e:
 
 import sys
 import inspect
+from utils import draw_nice_canvas
 
 # Modes
 VERBOSE_MODE = False
@@ -85,6 +86,9 @@ class HyperloopOutput:
         else:
             self.run_number = None
         self.out_path = path.abspath(out_path)
+        # ROOT interface
+        self.tfile = None
+        self.root_objects = {}
 
     def get_alien_path(self):
         if "alien://" in self.alien_path:
@@ -117,13 +121,22 @@ class HyperloopOutput:
             return False
         f = self.out_filename()
         try:
-            f = TFile.Open(f)
+            open(f)
         except:
             if throw_fatal:
                 fatal_msg("Cannot open", f)
             return False
         vmsg("File", f"`{f}`", "is sane")
         return True
+
+    def __str__(self) -> str:
+        p = f"{self.get_alien_path()}, locally {self.out_filename()}, run {self.get_run()}"
+        if self.is_sane():
+            p += " (already downloaded and ok)"
+        return p
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def copy_from_alien(self,
                         write_download_summary=True,
@@ -152,6 +165,75 @@ class HyperloopOutput:
         cmd = f"alien_cp -q {self.get_alien_path()} file:{self.out_filename()}"
         run_cmd(cmd)
 
+    def open(self):
+        if not self.tfile:
+            self.tfile = TFile(self.out_filename())
+        return self.tfile
+
+    def get(self, name=None):
+        if name in self.root_objects:
+            return self.root_objects[name]
+        f = self.open()
+        if name is None:
+            f.ls()
+            return
+        obj = f.Get(name)
+        if "Direc" in obj.ClassName():
+            obj.ls()
+        of_interest = ["TH1F"]
+        if obj.ClassName() in of_interest:
+            pass
+            # if f"{self.get_run()}" not in obj.GetTitle():
+            #     t = obj.GetTitle()
+            #     t = t + " Run " + f"{self.get_run()}"
+            #     t = t.strip()
+            #     obj.SetTitle(t)
+        self.root_objects[name] = obj
+        return obj
+
+    def average(self, name):
+        h = self.get(name)
+        if not h:
+            return None
+        return h.GetMean(), h.GetMeanError()
+
+    def draw(self, name):
+        h = self.get(name)
+        if not h:
+            return None
+        can = draw_nice_canvas(name, replace=False)
+        obj = h.DrawCopy()
+        if f"{self.get_run()}" not in obj.GetTitle():
+            t = obj.GetTitle()
+            t = t + " Run " + f"{self.get_run()}"
+            t = t.strip()
+            obj.SetTitle(t)
+        can.Update()
+        can.Modified()
+        return can
+
+    def fill_histo(self, h, name, quantity="mean"):
+        x = f"{self.get_run()}"
+        ib = int(h.GetEntries()) + 1
+        if h.GetXaxis().GetTitle() == "":
+            h.SetBit(TH1.kNoStats)
+            h.GetXaxis().SetTitle("Run number")
+        ytitle = None
+        if h.GetYaxis().GetTitle() == "":
+            ytitle = self.get(name).GetTitle()
+        h.GetXaxis().SetBinLabel(ib, x)
+        if quantity == "mean":
+            if ytitle is not None:
+                ytitle = f"<{ytitle}>"
+            y, ye = self.average(name)
+        if ytitle is not None:
+            h.GetYaxis().SetTitle(ytitle)
+        h.SetBinContent(ib, y)
+        h.SetBinError(ib, ye)
+
+    def __lt__(self, other):
+        return self.run_number < other.run_number
+
 
 def get_run_per_run_files(train_id=126264,
                           alien_path="https://alimonitor.cern.ch/alihyperloop-data/trains/train.jsp?train_id=",
@@ -171,6 +253,7 @@ def get_run_per_run_files(train_id=126264,
         for i in to_list:
             sub_file_list.append(HyperloopOutput(i, out_path=out_path))
     msg("Found", len(sub_file_list), "files to download")
+    sub_file_list.sort()
     return sub_file_list
 
 

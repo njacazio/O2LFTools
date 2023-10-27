@@ -24,7 +24,7 @@ except ImportError as e:
 
 import sys
 import inspect
-from utils import draw_nice_canvas
+from utils import draw_nice_canvas, draw_nice_frame
 
 # Modes
 VERBOSE_MODE = False
@@ -177,7 +177,16 @@ class HyperloopOutput:
         if name is None:
             f.ls()
             return
-        obj = f.Get(name)
+        if "/" in name:
+            obj = f
+            for i in name.split("/"):
+                if "List" in obj.ClassName():
+                    obj = obj.FindObject(i)
+                else:
+                    obj = obj.Get(i)
+
+        else:
+            obj = f.Get(name)
         if "Direc" in obj.ClassName():
             obj.ls()
         of_interest = ["TH1F"]
@@ -197,12 +206,29 @@ class HyperloopOutput:
             return None
         return h.GetMean(), h.GetMeanError()
 
-    def draw(self, name):
+    def valueat1(self, name):
+        h = self.get(name)
+        if not h:
+            return None
+        if "TEff" in h.ClassName():
+            b = h.FindFixBin(1)
+            return h.GetEfficiency(b), 0
+            return h.GetEfficiency(b), h.GetEfficiencyErrorUp(b)
+        b = h.GetXaxis().FindBin(1)
+        return h.GetBinContent(b), h.GetBinError(b)
+
+    def draw(self, name, x_range=None, y_range=None, opt=""):
         h = self.get(name)
         if not h:
             return None
         can = draw_nice_canvas(name, replace=False)
-        obj = h.DrawCopy()
+        if x_range is not None and y_range is not None:
+            draw_nice_frame(can, x_range, y_range, "x", "y")
+            opt += "same"
+        if "TH" in h.ClassName():
+            obj = h.DrawCopy(opt)
+        else:
+            obj = h.DrawClone(opt)
         if f"{self.get_run()}" not in obj.GetTitle():
             t = obj.GetTitle()
             t = t + " Run " + f"{self.get_run()}"
@@ -213,6 +239,9 @@ class HyperloopOutput:
         return can
 
     def fill_histo(self, h, name, quantity="mean"):
+        """
+        This function fills the histogram h with the quantity specified of the object asked.
+        """
         x = f"{self.get_run()}"
         ib = int(h.GetEntries()) + 1
         if h.GetXaxis().GetTitle() == "":
@@ -222,14 +251,25 @@ class HyperloopOutput:
         if h.GetYaxis().GetTitle() == "":
             ytitle = self.get(name).GetTitle()
         h.GetXaxis().SetBinLabel(ib, x)
-        if quantity == "mean":
+        if quantity is None:
+            y = 0
+            ye = 0
+        elif quantity == "mean":
             if ytitle is not None:
                 ytitle = f"<{ytitle}>"
             y, ye = self.average(name)
+        elif quantity == "valueat1":
+            if ytitle is not None:
+                ytitle = f"Value at 1" + h.GetXaxis().GetTitle()
+            y, ye = self.valueat1(name)
+        else:
+            raise ValueError(f"Quantity {quantity} not recognized")
+
         if ytitle is not None:
             h.GetYaxis().SetTitle(ytitle)
         h.SetBinContent(ib, y)
         h.SetBinError(ib, ye)
+        return ib
 
     def __lt__(self, other):
         return self.run_number < other.run_number

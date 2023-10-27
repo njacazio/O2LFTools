@@ -13,15 +13,14 @@ import configparser
 
 def main(hyperloop_train,
          input_configuration,
-         draw_every_run=False,
+         draw_every_run=True,
          do_download=False,
          skip_non_sane_runs=True):
     parser = configparser.ConfigParser()
     parser.read(input_configuration)
     if do_download:
-        l = download_hyperloop_per_run.main(hyperloop_train)
-    else:
-        l = download_hyperloop_per_run.get_run_per_run_files(train_id=hyperloop_train)
+        download_hyperloop_per_run.main(hyperloop_train)
+    l = download_hyperloop_per_run.get_run_per_run_files(train_id=hyperloop_train)
     for i in parser.sections():
         object_config = parser[i]
         trend = TH1F("trend"+i, "trend"+i, len(l), 0, len(l))
@@ -35,8 +34,11 @@ def main(hyperloop_train,
                 continue
             if draw_every_run:
                 j.get(i)
-                j.draw(i, x_range=object_config["x_range"].split(", "),
-                       y_range=object_config["y_range"].split(", "))
+                if "x_range" in object_config:
+                    j.draw(i, x_range=object_config["x_range"].split(", "),
+                           y_range=object_config["y_range"].split(", "))
+                else:
+                    j.draw(i)
                 input(f"Run {j.get_run()}\nPress enter to continue")
             j.fill_histo(trend, i, object_config["what_to_do"])
         # Computing average

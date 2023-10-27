@@ -15,7 +15,7 @@ try:
     from ROOT import TFile, TH1
 except:
     raise Exception("Cannot find ROOT, are you in a ROOT enviroment?")
-
+from multiprocessing import Pool
 try:
     import tqdm
 except ImportError as e:
@@ -184,6 +184,9 @@ class HyperloopOutput:
                     obj = obj.FindObject(i)
                 else:
                     obj = obj.Get(i)
+                if not obj:
+                    f.ls()
+                    raise ValueError(f"{name} not found")
 
         else:
             obj = f.Get(name)
@@ -297,22 +300,27 @@ def get_run_per_run_files(train_id=126264,
     return sub_file_list
 
 
+def download_file(i):
+    i.copy_from_alien(overwrite=False)
+
+
 def main(hyperloop_train_id=126264,
          out_path="/tmp/",
          overwrite=False,
          tag=None,
-         download_merged=False):
+         download_merged=False,
+         jobs=1):
     # Getting input for single
     l = get_run_per_run_files(train_id=hyperloop_train_id,
                               out_path=out_path,
                               list_meged_files=download_merged)
 
     downloaded = []
-    if "tqdm" in sys.modules:
-        for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
-            downloaded.append(i.copy_from_alien(overwrite=overwrite))
+    if jobs > 1:
+        with Pool() as pool:
+            pool.map(download_file, l)
     else:
-        for i in l:
+        for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
             downloaded.append(i.copy_from_alien(overwrite=overwrite))
 
 

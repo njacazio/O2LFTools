@@ -315,11 +315,15 @@ def main(hyperloop_train_id=126264,
          overwrite=False,
          tag=None,
          download_merged=False,
-         jobs=1):
+         jobs=1,
+         key_file="/tmp/tokenkey_1000.pem",
+         cert_file="/tmp/tokencert_1000.pem"):
     # Getting input for single
     l = get_run_per_run_files(train_id=hyperloop_train_id,
                               out_path=out_path,
-                              list_meged_files=download_merged)
+                              list_meged_files=download_merged,
+                              key_file=key_file,
+                              cert_file=cert_file)
 
     downloaded = []
     if jobs > 1:
@@ -353,6 +357,12 @@ if __name__ == "__main__":
     parser.add_argument("--download_merged", "-m",
                         action="store_true",
                         help="Flag to enable the download of the merged output file. Default: `False`")
+    parser.add_argument("--key_file", "-k",
+                        default="/tmp/tokenkey_1000.pem",
+                        help="Key file for authentication")
+    parser.add_argument("--cert_file", "-c",
+                        default="/tmp/tokencert_1000.pem",
+                        help="Certificate file for authentication")
     args = parser.parse_args()
     if args.verbose:
         VERBOSE_MODE = True
@@ -362,4 +372,6 @@ if __name__ == "__main__":
          out_path=args.out_path,
          overwrite=args.overwrite,
          tag=args.tag,
-         download_merged=args.download_merged)
+         download_merged=args.download_merged,
+         key_file=args.key_file,
+         cert_file=args.cert_file)

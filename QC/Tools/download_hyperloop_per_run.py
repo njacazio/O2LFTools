@@ -281,10 +281,16 @@ class HyperloopOutput:
 def get_run_per_run_files(train_id=126264,
                           alien_path="https://alimonitor.cern.ch/alihyperloop-data/trains/train.jsp?train_id=",
                           out_path="/tmp/",
-                          list_meged_files=False):
+                          list_meged_files=False,
+                          key_file="/tmp/tokenkey_1000.pem",
+                          cert_file="/tmp/tokencert_1000.pem"):
     out_name = path.join(out_path, f"HyperloopID_{train_id}.json")
+    if not path.isfile(key_file):
+        fatal_msg("Cannot find key file", key_file)
+    if not path.isfile(cert_file):
+        fatal_msg("Cannot find cert file", cert_file)
     if not path.isfile(out_name):
-        download_cmd = f"curl --key /tmp/tokenkey_1000.pem --cert /tmp/tokencert_1000.pem --insecure {alien_path}{train_id} -o {out_name}"
+        download_cmd = f"curl --key {key_file} --cert {cert_file} --insecure {alien_path}{train_id} -o {out_name}"
         run_cmd(download_cmd)
     sub_file_list = []
     with open(out_name) as json_data:

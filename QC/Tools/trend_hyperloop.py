@@ -92,6 +92,15 @@ if __name__ == "__main__":
     parser.add_argument("--input_configuration", "-i",
                         help="Train ID to consider",
                         default="trendConfig/efficiency.ini")
+    parser.add_argument("--download", "-d",
+                        help="Download the output (to be ran on the first time only)",
+                        action="store_true")
+    parser.add_argument("--draw_every_run", "-D",
+                        help="Download the output (to be ran on the first time only)",
+                        action="store_true")
+
     args = parser.parse_args()
     main(args.hyperloop_train_id,
-         input_configuration=args.input_configuration)
+         input_configuration=args.input_configuration,
+         do_download=args.download,
+         draw_every_run=args.draw_every_run)

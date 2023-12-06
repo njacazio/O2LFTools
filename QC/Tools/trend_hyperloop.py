@@ -7,6 +7,7 @@ Script to trend variables run per run
 
 import download_hyperloop_per_run
 from ROOT import TH1F, TCanvas, TGraph, TColor
+from utils import draw_nice_canvas
 import argparse
 import configparser
 
@@ -34,13 +35,19 @@ def main(hyperloop_train,
                 continue
             if draw_every_run:
                 j.get(i)
+                x_range = None
+                y_range = None
+                draw_opt = ""
                 if "x_range" in object_config:
-                    j.draw(i, x_range=object_config["x_range"].split(", "),
-                           y_range=object_config["y_range"].split(", "))
-                else:
-                    j.draw(i)
+                    x_range = object_config["x_range"].split(", ")
+                if "y_range" in object_config:
+                    y_range = object_config["y_range"].split(", ")
+                if "draw_opt" in object_config:
+                    draw_opt = object_config["draw_opt"]
+                if "x_range" in object_config:
+                    j.draw(i, x_range=x_range, y_range=y_range, opt=draw_opt)
                 input(f"Run {j.get_run()}\nPress enter to continue")
-            j.fill_histo(trend, i, object_config["what_to_do"])
+            j.fill_histo(trend, i, object_config["what_to_do"], object_config)
         # Computing average
         average = []
         run_counters = {}
@@ -63,8 +70,7 @@ def main(hyperloop_train,
         for j in range(graphs["skipped"].GetN()):
             graphs["skipped"].SetPoint(j, graphs["skipped"].GetPointX(j), average)
             run_counters["skipped"].append(r)
-        can = TCanvas("trend" + i)
-        can.Draw()
+        can = draw_nice_canvas("trend" + i, extend_right=True)
         trend.Draw()
         colours = {"skipped": "#e41a1c", "low": "#377eb8", "high": "#4daf4a"}
         markers = {"skipped": 4, "low": 22, "high": 23}
@@ -89,13 +95,13 @@ if __name__ == "__main__":
     parser.add_argument("hyperloop_train_id",
                         help="Train ID to consider",
                         type=int)
-    parser.add_argument("--input_configuration", "-i",
+    parser.add_argument("--input_configuration", "-i", "--ini",
                         help="Train ID to consider",
                         default="trendConfig/efficiency.ini")
     parser.add_argument("--download", "-d",
                         help="Download the output (to be ran on the first time only)",
                         action="store_true")
-    parser.add_argument("--draw_every_run", "-D",
+    parser.add_argument("--draw_every_run", "-D", "--single",
                         help="Download the output (to be ran on the first time only)",
                         action="store_true")
 

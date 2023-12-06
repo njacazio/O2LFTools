@@ -12,7 +12,7 @@ import os
 import json
 import argparse
 try:
-    from ROOT import TFile, TH1
+    from ROOT import TFile, TH1, TF1
 except:
     raise Exception("Cannot find ROOT, are you in a ROOT enviroment?")
 from multiprocessing import Pool
@@ -220,13 +220,54 @@ class HyperloopOutput:
         b = h.GetXaxis().FindBin(1)
         return h.GetBinContent(b), h.GetBinError(b)
 
+    def functionfit(self, name, option):
+        h = self.get(name)
+        if not h:
+            return None
+        if 0:
+            can = draw_nice_canvas("fit")
+            h.Draw()
+            can.Modified()
+            can.Update()
+            input("Press enter to continue")
+        if "TH2" in h.ClassName():
+            xrange = option["x_range"].split(", ")
+            xrange = [float(i) for i in xrange]
+            h = h.ProjectionX("tmp", h.GetYaxis().FindBin(xrange[0]), h.GetYaxis().FindBin(xrange[1]))
+        fun = TF1(h.GetName()+"functionfit", option["function"])
+        for i in enumerate(option["initial_parameters"].split(", ")):
+            fun.SetParameter(i[0], float(i[1]))
+            if f"par_range{i[0]}" in option:
+                par_range = option[f"par_range{i[0]}"].split(", ")
+                par_range = [float(i) for i in par_range]
+                fun.SetParLimits(i[0], *par_range)
+            print(fun.GetParameter(i[0]))
+        fun.Print()
+        fitrange = option["fit_range"].split(", ")
+        fitrange = [float(i) for i in fitrange]
+        h.Fit(fun, option["fit_opt"], "", *fitrange)
+        if (type(option["show_single_fit"]) is str and option["show_single_fit"] == "true" ) or (type(option["show_single_fit"]) is not str and option["show_single_fit"]):
+            can = draw_nice_canvas("fit")
+            h.Draw()
+            fun.Draw("same")
+            can.Modified()
+            can.Update()
+            input("Press enter to continue")
+        return fun.GetParameter(int(option["parameterindex"])), fun.GetParError(int(option["parameterindex"]))
+
     def draw(self, name, x_range=None, y_range=None, opt=""):
         h = self.get(name)
         if not h:
             return None
         can = draw_nice_canvas(name, replace=False)
+        if "TH" in h.ClassName():
+            xtit = h.GetXaxis().GetTitle()
+            ytit = h.GetYaxis().GetTitle()
+        else:
+            xtit= "x"
+            ytit= "y"
         if x_range is not None and y_range is not None:
-            draw_nice_frame(can, x_range, y_range, "x", "y")
+            draw_nice_frame(can, x_range, y_range, xtit, ytit)
             opt += "same"
         if "TH" in h.ClassName():
             obj = h.DrawCopy(opt)
@@ -241,7 +282,7 @@ class HyperloopOutput:
         can.Modified()
         return can
 
-    def fill_histo(self, h, name, quantity="mean"):
+    def fill_histo(self, h, name, quantity="mean", option=None):
         """
         This function fills the histogram h with the quantity specified of the object asked.
         """
@@ -265,6 +306,10 @@ class HyperloopOutput:
             if ytitle is not None:
                 ytitle = f"Value at 1" + h.GetXaxis().GetTitle()
             y, ye = self.valueat1(name)
+        elif quantity == "functionfit":
+            if ytitle is not None:
+                ytitle = option["treding_title"].strip("\"")
+            y, ye = self.functionfit(name, option)
         else:
             raise ValueError(f"Quantity {quantity} not recognized")
 

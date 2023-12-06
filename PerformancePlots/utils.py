@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from ROOT import TCanvas, TLegend, TLine, TLatex, TH1
+from ROOT import TCanvas, TLegend, TLine, TLatex, TH1, gPad
 
 
 nice_labels = []
@@ -54,28 +54,43 @@ def draw_nice_canvas(name, x=800, y=800, logx=False, logy=False, logz=True, titl
 nice_frames = {}
 
 
+def set_nice_frame(h):
+    h.SetBit(TH1.kNoStats)
+    h.SetBit(TH1.kNoTitle)
+    h.GetYaxis().SetTitleSize(0.04)
+    h.GetXaxis().SetTitleSize(0.04)
+    h.GetXaxis().SetTitleOffset(1.25)
+    h.SetDirectory(0)
+
+
 def draw_nice_frame(c, x, y, xt, yt):
-    c.cd()
+    if c is None:
+        gPad.cd()
+    else:
+        c.cd()
     global nice_frames
     if type(x) is not list:
         x = [x.GetXaxis().GetBinLowEdge(1),
              x.GetXaxis().GetBinUpEdge(x.GetNbinsX())]
+    else:
+        if len(x) != 2:
+            raise ValueError(f"X range must be a list of two elements, but is {x}")
+        x = [float(x[0]), float(x[1])]
     if type(y) is not list:
         if "TH2" in y.ClassName():
             y = [y.GetYaxis().GetBinLowEdge(1),
                  y.GetYaxis().GetBinUpEdge(y.GetYaxis().GetNbins())]
         else:
             y = [y.GetMinimum(), y.GetMaximum()]
+    else:
+        if len(y) != 2:
+            raise ValueError(f"Y range must be a list of two elements, but is {y}")
+        y = [float(y[0]), float(y[1])]
     if not type(xt) is str:
         xt = xt.GetXaxis().GetTitle()
     if not type(yt) is str:
         yt = yt.GetYaxis().GetTitle()
     frame = c.DrawFrame(x[0], y[0], x[1], y[1], f";{xt};{yt}")
-    frame.SetBit(TH1.kNoStats)
-    frame.SetBit(TH1.kNoTitle)
-    frame.GetYaxis().SetTitleSize(0.04)
-    frame.GetXaxis().SetTitleSize(0.04)
-    frame.GetXaxis().SetTitleOffset(1.25)
-    frame.SetDirectory(0)
+    set_nice_frame(frame)
     nice_frames[c.GetName()] = frame
     return frame

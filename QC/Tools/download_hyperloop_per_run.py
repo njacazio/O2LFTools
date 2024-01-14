@@ -246,7 +246,7 @@ class HyperloopOutput:
         fitrange = option["fit_range"].split(", ")
         fitrange = [float(i) for i in fitrange]
         h.Fit(fun, option["fit_opt"], "", *fitrange)
-        if (type(option["show_single_fit"]) is str and option["show_single_fit"] == "true" ) or (type(option["show_single_fit"]) is not str and option["show_single_fit"]):
+        if (type(option["show_single_fit"]) is str and option["show_single_fit"] == "true") or (type(option["show_single_fit"]) is not str and option["show_single_fit"]):
             can = draw_nice_canvas("fit")
             h.Draw()
             fun.Draw("same")
@@ -264,8 +264,8 @@ class HyperloopOutput:
             xtit = h.GetXaxis().GetTitle()
             ytit = h.GetYaxis().GetTitle()
         else:
-            xtit= "x"
-            ytit= "y"
+            xtit = "x"
+            ytit = "y"
         if x_range is not None and y_range is not None:
             draw_nice_frame(can, x_range, y_range, xtit, ytit)
             opt += "same"
@@ -326,7 +326,7 @@ class HyperloopOutput:
 def get_run_per_run_files(train_id=126264,
                           alien_path="https://alimonitor.cern.ch/alihyperloop-data/trains/train.jsp?train_id=",
                           out_path="/tmp/",
-                          list_meged_files=False,
+                          list_merged_files=False,
                           key_file="/tmp/tokenkey_1000.pem",
                           cert_file="/tmp/tokencert_1000.pem"):
     out_name = path.join(out_path, f"HyperloopID_{train_id}.json")
@@ -340,14 +340,16 @@ def get_run_per_run_files(train_id=126264,
     sub_file_list = []
     with open(out_name) as json_data:
         data = json.load(json_data)
-        if list_meged_files:
-            to_list = data["mergeResults"]
-        else:
-            to_list = data["jobResults"]
+        key = "mergeResults" if list_merged_files else "jobResults"
+        if key not in data:
+            print(data.keys())
+            fatal_msg("Cannot find key", key, "in json file", out_name)
+        to_list = data[key]
         for i in to_list:
             sub_file_list.append(HyperloopOutput(i, out_path=out_path))
     msg("Found", len(sub_file_list), "files to download")
-    sub_file_list.sort()
+    if not list_merged_files:
+        sub_file_list.sort()
     return sub_file_list
 
 
@@ -355,18 +357,18 @@ def download_file(i):
     i.copy_from_alien(overwrite=False)
 
 
-def main(hyperloop_train_id=126264,
-         out_path="/tmp/",
-         overwrite=False,
-         tag=None,
-         download_merged=False,
-         jobs=1,
-         key_file="/tmp/tokenkey_1000.pem",
-         cert_file="/tmp/tokencert_1000.pem"):
+def process_one_hyperloop_id(hyperloop_train_id=126264,
+                             out_path="/tmp/",
+                             overwrite=False,
+                             tag=None,
+                             download_merged=False,
+                             jobs=1,
+                             key_file="/tmp/tokenkey_1000.pem",
+                             cert_file="/tmp/tokencert_1000.pem"):
     # Getting input for single
     l = get_run_per_run_files(train_id=hyperloop_train_id,
                               out_path=out_path,
-                              list_meged_files=download_merged,
+                              list_merged_files=download_merged,
                               key_file=key_file,
                               cert_file=cert_file)
 
@@ -377,12 +379,14 @@ def main(hyperloop_train_id=126264,
     else:
         for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
             downloaded.append(i.copy_from_alien(overwrite=overwrite))
+    return downloaded
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("hyperloop_train_id",
+    parser.add_argument("hyperloop_train_ids",
                         help="Train ID to consider",
+                        nargs="+",
                         type=int)
     parser.add_argument("--out_path", "-o",
                         default="/tmp/",
@@ -399,12 +403,16 @@ if __name__ == "__main__":
     parser.add_argument("--tag", "-t",
                         default=None,
                         help="Tag to use to mark the downloaded files. Default: `None`")
-    parser.add_argument("--download_merged", "-m",
+    parser.add_argument("--download_merged", "-m", "--merged",
                         action="store_true",
                         help="Flag to enable the download of the merged output file. Default: `False`")
     parser.add_argument("--key_file", "-k",
                         default="/tmp/tokenkey_1000.pem",
                         help="Key file for authentication")
+    parser.add_argument("--jobs", "-j",
+                        type=int,
+                        default=1,
+                        help="Parallel jobs to run. Default: `1`")
     parser.add_argument("--cert_file", "-c",
                         default="/tmp/tokencert_1000.pem",
                         help="Certificate file for authentication")
@@ -413,10 +421,20 @@ if __name__ == "__main__":
         VERBOSE_MODE = True
     if args.drymode:
         DRY_MODE_RUNNING = True
-    main(hyperloop_train_id=args.hyperloop_train_id,
-         out_path=args.out_path,
-         overwrite=args.overwrite,
-         tag=args.tag,
-         download_merged=args.download_merged,
-         key_file=args.key_file,
-         cert_file=args.cert_file)
+
+    files_downloaded = []
+    for i in args.hyperloop_train_ids:
+        files_downloaded.append(process_one_hyperloop_id(hyperloop_train_id=i,
+                                                         out_path=args.out_path,
+                                                         jobs=args.jobs,
+                                                         overwrite=args.overwrite,
+                                                         tag=args.tag,
+                                                         download_merged=args.download_merged,
+                                                         key_file=args.key_file,
+                                                         cert_file=args.cert_file))
+    print("Files downloaded:")
+    print(" ".join(files_downloaded))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from ROOT import TCanvas, TLegend, TLine, TLatex, TH1, gPad
+from ROOT import TCanvas, TLegend, TLine, TLatex, TH1, gPad, TFile, TH2F
 
 
 nice_labels = []
@@ -49,6 +49,14 @@ def draw_nice_canvas(name, x=800, y=800, logx=False, logy=False, logz=True, titl
     c.Draw()
     nice_canvases[name] = c
     return c
+
+
+def update_all_canvases(wait=True):
+    for c in nice_canvases.values():
+        c.Modified()
+        c.Update()
+    if wait:
+        input("Press enter to continue")
 
 
 nice_frames = {}

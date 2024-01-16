@@ -164,6 +164,9 @@ class HyperloopOutput:
         msg("Downloading", self.get_alien_path(), "to", self.out_filename())
         cmd = f"alien_cp -q {self.get_alien_path()} file:{self.out_filename()}"
         run_cmd(cmd)
+        if self.is_sane():
+            return self.out_filename()
+        return None
 
     def open(self):
         if not self.tfile:
@@ -354,7 +357,7 @@ def get_run_per_run_files(train_id=126264,
 
 
 def download_file(i):
-    i.copy_from_alien(overwrite=False)
+    return i.copy_from_alien(overwrite=False)
 
 
 def process_one_hyperloop_id(hyperloop_train_id=126264,
@@ -379,7 +382,8 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
     else:
         for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
             downloaded.append(i.copy_from_alien(overwrite=overwrite))
-    return downloaded
+    print("Downloaded for ID", hyperloop_train_id, "=", downloaded)
+    return " ".join(downloaded)
 
 
 def main():

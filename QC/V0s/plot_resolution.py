@@ -15,6 +15,9 @@ def process_one_file(filename, tag=None):
     histograms = {"perf-k0s-resolution/h2_masspT": None}
     histograms["perf-k0s-resolution/h2_masseta"] = None
     histograms["perf-k0s-resolution/h2_massphi"] = None
+    x_variables = {"perf-k0s-resolution/h2_masspT": "p_{T} (GeV/c)"}
+    x_variables["perf-k0s-resolution/h2_masseta"] = "#eta"
+    x_variables["perf-k0s-resolution/h2_massphi"] = "#varphi (rad)"
     for i in histograms:
         histograms[i] = file.Get(i)
         histograms[i].SetDirectory(0)
@@ -24,7 +27,7 @@ def process_one_file(filename, tag=None):
     file.Close()
 
     for i in histograms:
-        can = draw_nice_canvas(i)
+        can = draw_nice_canvas(i, replace=False)
         h = histograms[i]
         g_mean = TGraphErrors()
         if tag is not None:
@@ -43,7 +46,7 @@ def process_one_file(filename, tag=None):
         can.Update()
         fun = TF1("gaus(0)+pol0(3)", "gaus(0)+pol1(3)", 0.45, 0.55)
         fun.SetParLimits(2, 0, 0.2)
-        canbin = draw_nice_canvas("singlebin")
+        canbin = draw_nice_canvas("singlebin", replace=False)
         for k in range(1, h.GetNbinsY()+1):
             hp = h.ProjectionX("hp", k, k)
             fun.SetParameters(1, 0.5, 0.01, 0.1, 0.)
@@ -73,7 +76,7 @@ def process_one_file(filename, tag=None):
             g_sigma.SetPoint(g_sigma.GetN(), h.GetYaxis().GetBinCenter(k), fun.GetParameter(2))
             g_sigma.SetPointError(g_sigma.GetN()-1, 0, fun.GetParError(2))
 
-        can = draw_nice_canvas(i+"vs")
+        can = draw_nice_canvas(i+"vs", replace=False)
         draw_nice_frame(can,
                         [h.GetYaxis().GetBinLowEdge(1), h.GetYaxis().GetBinUpEdge(h.GetNbinsY()+1)],
                         [h.GetXaxis().GetBinLowEdge(1), h.GetXaxis().GetBinUpEdge(h.GetNbinsX()+1)],
@@ -84,23 +87,32 @@ def process_one_file(filename, tag=None):
         graphs[i+"sigma"] = g_sigma
         can.Modified()
         can.Update()
-        can = draw_nice_canvas(i+"vsSigma")
+        can = draw_nice_canvas(i+"vsSigma", replace=False)
         g_sigma.Draw("ALP")
     return graphs
 
 
-def main(filenames, tags=["Data", "LHC15o"]):
+def main(filenames, tags={"150658": "LHC15o",
+                          "150796": "LHC23k6c_pass1",
+                          "150642": "LHC23_PbPb_pass1_sampling",
+                          "150994": "LHC23g"}):
     results = []
     for i in enumerate(filenames):
-        results.append(process_one_file(i[1], tag=tags[i[0]]))
-        input("Press enter to continue...")
+        t = None
+        for j in tags:
+            if j in i[1]:
+                t = tags[j]
+                break
+        print(i[1], t)
+        results.append(process_one_file(i[1], tag=t))
+        # input("Press enter to continue...")
     legs = []
     for i in results[0]:
         can = draw_nice_canvas(i)
         draw_nice_frame(can, [0, 10], [0, 0.05],
                         results[0][i].GetXaxis().GetTitle(),
                         results[0][i].GetYaxis().GetTitle())
-        colors = ['#e41a1c', '#377eb8', '#4daf4a']
+        colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3']
         leg = TLegend(0.5, 0.5, 0.9, 0.9)
         legs.append(leg)
         for j in enumerate(results):

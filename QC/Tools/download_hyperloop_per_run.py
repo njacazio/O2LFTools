@@ -12,7 +12,7 @@ import os
 import json
 import argparse
 try:
-    from ROOT import TFile, TH1, TF1
+    from ROOT import TFile, TH1, TF1, TLatex
 except:
     raise Exception("Cannot find ROOT, are you in a ROOT enviroment?")
 from multiprocessing import Pool
@@ -29,6 +29,23 @@ from utils import draw_nice_canvas, draw_nice_frame
 # Modes
 VERBOSE_MODE = False
 DRY_MODE_RUNNING = False
+
+labels_drawn = []
+
+
+def draw_label(label, x=0.55, y=0.96, size=0.035, align=21, ndc=True):
+    global labels_drawn
+    while label.startswith(" ") or label.endswith(" "):
+        label = label.strip()
+    l = TLatex(x, y, label)
+    if ndc:
+        l.SetNDC()
+    l.Draw()
+    l.SetTextAlign(align)
+    l.SetTextFont(42)
+    l.SetTextSize(size)
+    labels_drawn.append(l)
+    return l
 
 
 class bcolors:
@@ -233,9 +250,13 @@ class HyperloopOutput:
             can.Modified()
             can.Update()
             input("Press enter to continue")
+        projection_interval = None
         if "TH2" in h.ClassName():
             xrange = option["x_range"].split(", ")
             xrange = [float(i) for i in xrange]
+            projection_interval = [h.GetYaxis().GetBinLowEdge(h.GetYaxis().FindBin(xrange[0])),
+                                   h.GetYaxis().GetBinUpEdge(h.GetYaxis().FindBin(xrange[1])),
+                                   h.GetYaxis().GetTitle()]
             h = h.ProjectionX("tmp", h.GetYaxis().FindBin(xrange[0]), h.GetYaxis().FindBin(xrange[1]))
         fun = TF1(h.GetName()+"functionfit", option["function"])
         for i in enumerate(option["initial_parameters"].split(", ")):
@@ -250,9 +271,15 @@ class HyperloopOutput:
         fitrange = [float(i) for i in fitrange]
         h.Fit(fun, option["fit_opt"], "", *fitrange)
         if (type(option["show_single_fit"]) is str and option["show_single_fit"] == "true") or (type(option["show_single_fit"]) is not str and option["show_single_fit"]):
-            can = draw_nice_canvas("fit")
+            can = draw_nice_canvas("fit", replace=False)
+            h.SetBit(TH1.kNoStats)
+            h.SetBit(TH1.kNoTitle)
             h.Draw()
             fun.Draw("same")
+            if projection_interval is not None:
+                draw_label("Projection interval: " + f"{projection_interval[0]:.2f}, {projection_interval[1]:.2f}, {projection_interval[2]}")
+            draw_label(h.GetTitle(), 0.77, 0.85)
+            draw_label(f"Run {self.get_run()}", 0.25, 0.85)
             can.Modified()
             can.Update()
             input("Press enter to continue")

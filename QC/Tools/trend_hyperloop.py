@@ -36,7 +36,6 @@ rates[544389] = 26876.1
 rates[544390] = 17959.1
 rates[544391] = 14724.2
 rates[544392] = 12663.5
-
 rates[544418] = 10200.2
 rates[544420] = 5373.17
 rates[544434] = 4385.37
@@ -58,6 +57,52 @@ rates[544514] = 15066
 rates[544515] = 13300.4
 rates[544516] = 12546.1
 rates[544518] = 10720.7
+
+if 0:
+    rates[544013] = 7978.71
+    rates[544028] = 30498.8
+    rates[544032] = 26943.9
+    rates[544033] = 18413.2
+    rates[544091] = 31151.7
+    rates[544095] = 26522.3
+    rates[544098] = 22626.2
+    rates[544116] = 38999.9
+    rates[544121] = 27147.2
+    rates[544122] = 18279.4
+    rates[544123] = 14585
+    rates[544124] = 8566.13
+    rates[544126] = 50.3408
+    rates[544167] = 45878.9
+    rates[544180] = 45990.2
+    rates[544184] = 35432.5
+    rates[544185] = 29917.9
+    rates[544384] = 43731.4
+    rates[544389] = 35029.7
+    rates[544390] = 19252.5
+    rates[544391] = 16126.3
+    rates[544392] = 13118.5
+    rates[544418] = 10316
+    rates[544420] = 9951.05
+    rates[544434] = 11335.9
+    rates[544451] = 29995.9
+    rates[544454] = 23697.6
+    rates[544474] = 41617
+    rates[544475] = 20094.3
+    rates[544476] = 18370.9
+    rates[544477] = 13493.6
+    rates[544490] = 47195.4
+    rates[544491] = 37349.5
+    rates[544492] = 15438.7
+    rates[544508] = 38571.5
+    rates[544510] = 33180
+    rates[544511] = 23339.7
+    rates[544512] = 19065.6
+    rates[544513] = 16425.5
+    rates[544514] = 15711.8
+    rates[544515] = 13622.3
+    rates[544516] = 12727
+    rates[544518] = 11788.2
+
 
 periods = {}
 periods["LHC23zzf_apass1"] = [544013]
@@ -116,6 +161,7 @@ def main(hyperloop_train,
         # Computing average
         average = []
         run_counters = {}
+        coordinates_vs_rate_per_run = {}
         for j in graphs:
             run_counters[j] = []
         for j in range(1, trend.GetNbinsX()+1):
@@ -134,6 +180,7 @@ def main(hyperloop_train,
                 run_counters["low"].append(run_number)
             if run_number in rates:
                 graph_vs_rate.AddPoint(rates[run_number], y)
+                coordinates_vs_rate_per_run[run_number] = [rates[run_number], y]
                 graph_vs_rate.SetPointError(graph_vs_rate.GetN()-1, 0, ye)
             else:
                 graph_vs_rate.AddPoint(-run_number, y)
@@ -178,7 +225,7 @@ def main(hyperloop_train,
         can.SaveAs("/tmp/trend" + i.replace("/", "_") + ".png")
         if 1:
             graph_vs_rate.GetYaxis().SetTitle(trend.GetYaxis().GetTitle())
-            draw_nice_canvas("trend_vs_rate" + i, extend_right=True)
+            can_vs_rate = draw_nice_canvas("trend_vs_rate" + i, extend_right=True)
             graph_vs_rate.Draw("AP")
             leg = TLegend()
             for k in graph_vs_rate_split:
@@ -186,6 +233,15 @@ def main(hyperloop_train,
                 leg.AddEntry(graph_vs_rate_split[k])
             leg.Draw()
             draw_label(label)
+            for coord in coordinates_vs_rate_per_run:
+                draw_label(f"{coord}",
+                           coordinates_vs_rate_per_run[coord][0]*1.01,
+                           coordinates_vs_rate_per_run[coord][1]*1.001,
+                           align=11,
+                           size=0.02,
+                           ndc=False)
+            can_vs_rate.Modified()
+            can_vs_rate.Update()
     input("Press enter to continue")
 
 

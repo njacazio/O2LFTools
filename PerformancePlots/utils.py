@@ -19,6 +19,37 @@ def draw_nice_label(l, x=0.7, y=0.5, s=0.035, yd=0, align=11):
     return latex
 
 
+def getfromfile(filename, objname):
+    f = TFile(filename, "READ")
+    obj = f.Get(objname)
+    if not obj:
+        f.ls()
+        raise ValueError("Did not find", objname, "in", filename)
+    if "Directory" in obj.ClassName():
+        obj.ls()
+    if "TH" in obj.ClassName():
+        obj.SetDirectory(0)
+    f.Close()
+    return obj
+
+
+transposed_histos = {}
+
+
+def transpose_th2(h):
+    htransposed = TH2F(f"htransposed_{h.GetName()}", f"htransposed_{h.GetName()};{h.GetYaxis().GetTitle()};{h.GetXaxis().GetTitle()}", h.GetYaxis().GetNbins(),
+                       h.GetYaxis().GetXmin(), h.GetYaxis().GetXmax(), h.GetXaxis().GetNbins(), h.GetXaxis().GetXmin(), h.GetXaxis().GetXmax())
+    for ix in range(1, h.GetNbinsX() + 1):
+        for iy in range(1, h.GetNbinsY() + 1):
+            htransposed.SetBinContent(iy, ix, h.GetBinContent(ix, iy))
+            htransposed.SetBinError(iy, ix, h.GetBinError(ix, iy))
+    n = f"{h.GetName()}"
+    if n in transposed_histos:
+        n = f"{n}_{len(transposed_histos)}"
+    transposed_histos[n] = htransposed
+    return htransposed
+
+
 nice_canvases = {}
 
 
@@ -35,7 +66,7 @@ def draw_nice_canvas(name, x=800, y=800, logx=False, logy=False, logz=True, titl
     right_margin = 0.05
     if extend_right:
         x = 1200
-        right_margin = 0.317195
+        # right_margin = 0.317195
     c = TCanvas(name, title, x, y)
     c.SetLogx(logx)
     c.SetLogy(logy)

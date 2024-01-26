@@ -13,7 +13,8 @@ if 1:
 def process_one_file(filename, tag=None):
     file = TFile(filename, "READ")
     histograms = {}
-    histograms["perf-k0s-resolution/h2_masspT"] = None
+    # histograms["perf-k0s-resolution/h2_masspT"] = None
+    histograms["perf-k0s-resolution/thn_mass"] = None
     # histograms["perf-k0s-resolution/h2_masseta"] = None
     # histograms["perf-k0s-resolution/h2_massphi"] = None
     # histograms["qa-k0s-tracking-efficiency/VsRadius/h_mass"] = None
@@ -25,10 +26,24 @@ def process_one_file(filename, tag=None):
         if not histograms[i]:
             print("Did not find", i, "in", filename)
             continue
+        if "THnSparseT" in histograms[i].ClassName():
+            for j in range(0, histograms[i].GetNdimensions()):
+                print(j, histograms[i].GetAxis(j).GetTitle(),
+                      histograms[i].GetAxis(j).GetNbins(),
+                      histograms[i].GetAxis(j).GetBinLowEdge(1),
+                      histograms[i].GetAxis(j).GetBinUpEdge(histograms[i].GetAxis(j).GetNbins()))
+            histograms[i].GetAxis(4).SetRange(1, 1)
+            histograms[i].GetAxis(5).SetRange(1, 1)
+            histograms[i] = histograms[i].Projection(1,0)
+            histograms[i].SetDirectory(0)
+            continue
         histograms[i].SetDirectory(0)
         print(i, histograms[i].GetXaxis().GetTitle(), histograms[i].GetXaxis().GetNbins(),
               histograms[i].GetYaxis().GetTitle(), histograms[i].GetYaxis().GetNbins())
     file.Close()
+    histograms["perf-k0s-resolution/h2_masspT"] = histograms["perf-k0s-resolution/thn_mass"]
+    histograms.pop("perf-k0s-resolution/thn_mass")
+
     toremove = []
     for i in histograms:
         if not histograms[i]:
@@ -54,6 +69,7 @@ def process_one_file(filename, tag=None):
         g_mean.GetYaxis().SetTitle("#mu <" + h.GetXaxis().GetTitle().replace("(", "> ("))
 
         g_sigma = TGraphErrors()
+        g_sigma.SetName("g_sigma")
         if tag is not None:
             g_sigma.SetTitle(tag)
         g_sigma.GetXaxis().SetTitle(h.GetYaxis().GetTitle())
@@ -62,18 +78,24 @@ def process_one_file(filename, tag=None):
         h.Draw("colz")
         can.Modified()
         can.Update()
-        fun = TF1("gaus(0)+pol0(3)", "gaus(0)+pol1(3)", 0.45, 0.55)
+        # fun = TF1("gaus(0)+pol0(3)", "gaus(0)+pol1(3)", 0.45, 0.55)
+        fun = TF1("gaus(0)+pol0(3)", "gaus(0)+pol1(3)", 0.42, 0.58)
         fun.SetParLimits(0, 1, 10000000)
         fun.SetParLimits(2, 0, 0.2)
         canbin = draw_nice_canvas("singlebin", replace=False)
         for k in range(1, h.GetNbinsY()+1):
             hp = h.ProjectionX("hp", k, k)
-            fun.SetParameters(1, 0.5, 0.01, 0.1, 0.)
+            mass_start = 0.5
+            # if hp.GetMean() > 0:
+            #     mass_start = hp.GetMean()
+            fun.SetParameters(1, mass_start, 0.001, 0.1, 0.)
             hp.Fit(fun, "QNRWW")
 
             def run_fit(strategy):
                 ROOT.Math.MinimizerOptions().SetStrategy(strategy)
                 r = hp.Fit(fun, "QINSWW")
+                if not gMinuit:
+                    return None
                 st = gMinuit.fCstatu
                 if "CONVERGED" not in st:
                     print("Fit in pT", "with strategy", strategy, "did not converge -> ", st)
@@ -120,9 +142,13 @@ def main(filenames,
                "150994": "LHC23g",
                "152893": "LHC23f_pass1",
                "/tmp/AnalysisResults_apass1.root": "LHC23zzh_apass1_544124",
+               "/tmp/New.root": "LHC23k6d",
+               "156569": "LHC23k6d",
+               "156999": "LHC22o_pass5_skimmed_QC1",
                "/tmp/AnalysisResults.root": "LHC23zzh_apass2_544124"},
          only={"150642": "19415",
                "150796": "asd",
+               "151351": "asd",
                "152893": "asd"}):
     results = []
     for i in enumerate(filenames):

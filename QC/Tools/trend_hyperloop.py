@@ -11,105 +11,10 @@ from ROOT import TH1F, TGraph, TColor, TH1, TLegend, TGraphErrors
 from utils import draw_nice_canvas
 import argparse
 import configparser
+from run_numbers import *
 
-rates = {}
-
-rates[544013] = 6278.43
-rates[544028] = 30336.7
-rates[544032] = 23718.5
-rates[544033] = 4957.46
-rates[544091] = 29326.7
-rates[544095] = 25101.8
-rates[544098] = 18005.6
-rates[544116] = 38342
-rates[544121] = 22543.5
-rates[544122] = 16559.5
-rates[544123] = 11629.7
-rates[544124] = 6610.2
-rates[544126] = 51.437
-rates[544167] = 45633.8
-rates[544180] = 45755.2
-rates[544184] = 32927.3
-rates[544185] = 28727.2
-rates[544384] = 41927
-rates[544389] = 26876.1
-rates[544390] = 17959.1
-rates[544391] = 14724.2
-rates[544392] = 12663.5
-rates[544418] = 10200.2
-rates[544420] = 5373.17
-rates[544434] = 4385.37
-rates[544451] = 27927.2
-rates[544454] = 19440.6
-rates[544474] = 29367.4
-rates[544475] = 19438.5
-rates[544476] = 16104.7
-rates[544477] = 13211.6
-rates[544490] = 43111.7
-rates[544491] = 24276.6
-rates[544492] = 15135.7
-rates[544508] = 39628
-rates[544510] = 29528.7
-rates[544511] = 21593.6
-rates[544512] = 18389.5
-rates[544513] = 16239.1
-rates[544514] = 15066
-rates[544515] = 13300.4
-rates[544516] = 12546.1
-rates[544518] = 10720.7
-
-if 0:
-    rates[544013] = 7978.71
-    rates[544028] = 30498.8
-    rates[544032] = 26943.9
-    rates[544033] = 18413.2
-    rates[544091] = 31151.7
-    rates[544095] = 26522.3
-    rates[544098] = 22626.2
-    rates[544116] = 38999.9
-    rates[544121] = 27147.2
-    rates[544122] = 18279.4
-    rates[544123] = 14585
-    rates[544124] = 8566.13
-    rates[544126] = 50.3408
-    rates[544167] = 45878.9
-    rates[544180] = 45990.2
-    rates[544184] = 35432.5
-    rates[544185] = 29917.9
-    rates[544384] = 43731.4
-    rates[544389] = 35029.7
-    rates[544390] = 19252.5
-    rates[544391] = 16126.3
-    rates[544392] = 13118.5
-    rates[544418] = 10316
-    rates[544420] = 9951.05
-    rates[544434] = 11335.9
-    rates[544451] = 29995.9
-    rates[544454] = 23697.6
-    rates[544474] = 41617
-    rates[544475] = 20094.3
-    rates[544476] = 18370.9
-    rates[544477] = 13493.6
-    rates[544490] = 47195.4
-    rates[544491] = 37349.5
-    rates[544492] = 15438.7
-    rates[544508] = 38571.5
-    rates[544510] = 33180
-    rates[544511] = 23339.7
-    rates[544512] = 19065.6
-    rates[544513] = 16425.5
-    rates[544514] = 15711.8
-    rates[544515] = 13622.3
-    rates[544516] = 12727
-    rates[544518] = 11788.2
-
-
-periods = {}
-periods["LHC23zzf_apass1"] = [544013]
-periods["LHC23zzg_apass1"] = [544028, 544032]
-periods["LHC23zzh_apass1"] = [544091, 544095, 544098]
-periods["LHC23zzi_apass1"] = [544167, 544180, 544184, 544185, 544389, 544390, 544391, 544392]
-periods["LHC23zzk_apass1"] = [544451, 544454, 544474, 544475, 544476, 544477, 544490, 544491, 544492, 544508, 544510]
+trend_calls = -1
+trend_objects = []
 
 
 def main(hyperloop_train,
@@ -117,19 +22,23 @@ def main(hyperloop_train,
          draw_every_run=True,
          do_download=False,
          skip_non_sane_runs=True,
-         label="LHC23_PbPb_pass1_sampling"):
+         label=""):
+    global trend_calls
+    trend_calls += 1
     parser = configparser.ConfigParser()
     parser.read(input_configuration)
     if do_download:
-        download_hyperloop_per_run.main(hyperloop_train)
+        download_hyperloop_per_run.process_one_hyperloop_id(hyperloop_train)
     l = download_hyperloop_per_run.get_run_per_run_files(train_id=hyperloop_train)
     for i in parser.sections():
         object_config = parser[i]
-        trend = TH1F("trend"+i, "trend"+i, len(l), 0, len(l))
+        trend = f"trend_{i}_{trend_calls}"
+        trend = TH1F(trend, trend, len(l), 0, len(l))
         trend.SetBit(TH1.kNoStats)
         trend.SetBit(TH1.kNoTitle)
         graphs = {"skipped": TGraph(), "low": TGraph(), "high": TGraph()}
         graph_vs_rate = TGraphErrors()
+        trend_objects.append(graph_vs_rate)
         graph_vs_rate.SetName("graph_vs_rate_" + i)
         graph_vs_rate.SetName("graph_vs_rate_")
         graph_vs_rate.GetXaxis().SetTitle("<INEL> (Hz) from ZDC")
@@ -189,7 +98,8 @@ def main(hyperloop_train,
                     if k not in graph_vs_rate_split:
                         col = TColor.GetColor(colors.pop(0))
                         graph_vs_rate_split[k] = TGraphErrors()
-                        graph_vs_rate_split[k].SetMarkerStyle(20)
+                        trend_objects.append(graph_vs_rate_split[k])
+                        graph_vs_rate_split[k].SetMarkerStyle(20 + int(trend.GetName().split("_")[-1]))
                         graph_vs_rate_split[k].SetName(graph_vs_rate.GetName() + "_"+k)
                         graph_vs_rate_split[k].SetTitle(k)
                         graph_vs_rate_split[k].SetLineColor(col)
@@ -202,8 +112,14 @@ def main(hyperloop_train,
         for j in range(graphs["skipped"].GetN()):
             graphs["skipped"].SetPoint(j, graphs["skipped"].GetPointX(j), average)
             run_counters["skipped"].append(j)
-        can = draw_nice_canvas("trend" + i, extend_right=True)
-        trend.Draw()
+        can = draw_nice_canvas("trend" + i, extend_right=True, replace=False)
+        extra_label = None
+        if can.GetListOfPrimitives().GetEntries() == 0:
+            if trend.GetListOfFunctions().GetEntries() > 0:
+                extra_label = draw_label(trend.GetListOfFunctions()[0].GetTitle(), align=33, x=0.92, y=0.90)
+        trend.Draw("same")
+        trend_objects.append(trend)
+
         colours = {"skipped": "#e41a1c", "low": "#377eb8", "high": "#4daf4a"}
         markers = {"skipped": 4, "low": 22, "high": 23}
         for j in graphs:
@@ -225,8 +141,11 @@ def main(hyperloop_train,
         can.SaveAs("/tmp/trend" + i.replace("/", "_") + ".png")
         if 1:
             graph_vs_rate.GetYaxis().SetTitle(trend.GetYaxis().GetTitle())
-            can_vs_rate = draw_nice_canvas("trend_vs_rate" + i, extend_right=True)
-            graph_vs_rate.Draw("AP")
+            can_vs_rate = draw_nice_canvas("trend_vs_rate" + i, extend_right=True, replace=False)
+            if can_vs_rate.GetListOfPrimitives().GetEntries() == 0:
+                graph_vs_rate.Draw("AP")
+            else:
+                graph_vs_rate.Draw("PSAME")
             leg = TLegend()
             for k in graph_vs_rate_split:
                 graph_vs_rate_split[k].Draw("PESAME")
@@ -240,6 +159,8 @@ def main(hyperloop_train,
                            align=11,
                            size=0.02,
                            ndc=False)
+            if extra_label is not None:
+                extra_label.Draw()
             can_vs_rate.Modified()
             can_vs_rate.Update()
     input("Press enter to continue")
@@ -247,8 +168,9 @@ def main(hyperloop_train,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("hyperloop_train_id",
+    parser.add_argument("hyperloop_train_ids",
                         help="Train ID to consider",
+                        nargs="+",
                         type=int)
     parser.add_argument("--input_configuration", "-i", "--ini",
                         help="Train ID to consider",
@@ -259,9 +181,14 @@ if __name__ == "__main__":
     parser.add_argument("--draw_every_run", "-D", "--single",
                         help="Download the output (to be ran on the first time only)",
                         action="store_true")
+    parser.add_argument("--label", "-l",
+                        help="Download the output (to be ran on the first time only)",
+                        default="")
 
     args = parser.parse_args()
-    main(args.hyperloop_train_id,
-         input_configuration=args.input_configuration,
-         do_download=args.download,
-         draw_every_run=args.draw_every_run)
+    for i in args.hyperloop_train_ids:
+        main(i,
+             label=args.label,
+             input_configuration=args.input_configuration,
+             do_download=args.download,
+             draw_every_run=args.draw_every_run)

@@ -12,7 +12,8 @@ import os
 import json
 import argparse
 try:
-    from ROOT import TFile, TH1, TF1, TLatex
+    from ROOT import TFile, TH1, TF1, TLatex, gMinuit, TNamed
+    import ROOT
 except:
     raise Exception("Cannot find ROOT, are you in a ROOT enviroment?")
 from multiprocessing import Pool
@@ -92,12 +93,13 @@ def run_cmd(cmd):
     vmsg(run_result)
     return run_result
 
-
+drawn_objects = []
 class HyperloopOutput:
     def __init__(self,
                  json_entry,
                  out_path="/tmp/"):
-        self.alien_path = json_entry["outputdir"] + "/AnalysisResults.root"
+        self.alien_outputdir = json_entry["outputdir"]
+        self.alien_path_analysis_results = self.alien_outputdir + "/AnalysisResults.root"
         if "run" in json_entry:
             self.run_number = json_entry["run"]
         else:
@@ -108,18 +110,38 @@ class HyperloopOutput:
         self.root_objects = {}
 
     def get_alien_path(self):
-        if "alien://" in self.alien_path:
-            raise RuntimeError(f"Path {self.alien_path} is already an alien path")
-        return "alien://" + self.alien_path
+        if "alien://" in self.alien_path_analysis_results:
+            raise RuntimeError(f"Path {self.alien_path_analysis_results} is already an alien path")
+        return "alien://" + self.alien_path_analysis_results
+
+    def find_derived_data(self, merged_derived_data=True):
+        cmd = f"alien_find {self.alien_outputdir} AO2D.root"
+        out = run_cmd(cmd)
+        found_files = out.stdout
+        # print(found_files)
+        found_files = found_files.decode('ascii').strip("\n")
+        file_list = []
+        if merged_derived_data and "AOD" not in found_files:
+            merged_derived_data = False
+        found_files = found_files.split("\n")
+        # print(found_files)
+        for i in found_files:
+            if merged_derived_data and "AOD" not in i:
+                continue
+            elif not merged_derived_data and "AOD" in i:
+                continue
+            file_list.append(i)
+        # print(file_list)
+        return file_list
 
     def local_file_position(self):
-        return self.alien_path.replace("alien://", "")
+        return self.alien_path_analysis_results.replace("alien://", "")
 
     def get_run(self):
         return self.run_number
 
     def out_filename(self):
-        in_path = self.alien_path
+        in_path = self.alien_path_analysis_results
         file_name = path.basename(in_path)
         dir_name = path.dirname(in_path)
         return path.join(self.out_path, dir_name.strip("/"), file_name)
@@ -176,7 +198,8 @@ class HyperloopOutput:
                 return self.out_filename()
             else:
                 os.remove(self.out_filename())
-                msg("File", self.out_filename(), "was not sane, removing it and attempting second download", color=bcolors.BWARNING)
+                msg("File", self.out_filename(),
+                    "was not sane, removing it and attempting second download", color=bcolors.BWARNING)
 
         msg("Downloading", self.get_alien_path(), "to", self.out_filename())
         cmd = f"alien_cp -q {self.get_alien_path()} file:{self.out_filename()}"
@@ -242,14 +265,17 @@ class HyperloopOutput:
 
     def functionfit(self, name, option):
         h = self.get(name)
+        extra = None
         if not h:
             return None
+        if h.GetEntries() <= 0:
+            raise ValueError("Error", h.GetName(), "has no entries")
         if 0:
-            can = draw_nice_canvas("fit")
+            can = draw_nice_canvas("before_fit", replace=False)
             h.Draw()
             can.Modified()
             can.Update()
-            input("Press enter to continue")
+            # input("Press enter to continue")
         projection_interval = None
         if "TH2" in h.ClassName():
             xrange = option["x_range"].split(", ")
@@ -257,21 +283,31 @@ class HyperloopOutput:
             projection_interval = [h.GetYaxis().GetBinLowEdge(h.GetYaxis().FindBin(xrange[0])),
                                    h.GetYaxis().GetBinUpEdge(h.GetYaxis().FindBin(xrange[1])),
                                    h.GetYaxis().GetTitle()]
+            extra = TNamed("projection_interval",
+                           "Projection interval: " + f"{projection_interval[0]:.2f}, {projection_interval[1]:.2f}, {projection_interval[2]}")
             h = h.ProjectionX("tmp", h.GetYaxis().FindBin(xrange[0]), h.GetYaxis().FindBin(xrange[1]))
-        fun = TF1(h.GetName()+"functionfit", option["function"])
+        fitrange = option["fit_range"].split(", ")
+        fitrange = [float(i) for i in fitrange]
+        fun = TF1(h.GetName()+"functionfit", option["function"], *fitrange)
         for i in enumerate(option["initial_parameters"].split(", ")):
             fun.SetParameter(i[0], float(i[1]))
             if f"par_range{i[0]}" in option:
                 par_range = option[f"par_range{i[0]}"].split(", ")
                 par_range = [float(i) for i in par_range]
                 fun.SetParLimits(i[0], *par_range)
-            print(fun.GetParameter(i[0]))
-        fun.Print()
-        fitrange = option["fit_range"].split(", ")
-        fitrange = [float(i) for i in fitrange]
-        h.Fit(fun, option["fit_opt"], "", *fitrange)
+            # print(fun.GetParameter(i[0]))
+        # fun.Print()
+        # for strat in [3]:
+        for strat in [0, 1, 2, 3]:
+            ROOT.Math.MinimizerOptions().SetStrategy(strat)
+            h.Fit(fun, option["fit_opt"], "", *fitrange)
+        fit_converged = gMinuit and gMinuit.fCstatu and ("CONVERGED" in gMinuit.fCstatu or "OK" in gMinuit.fCstatu)
+        if not fit_converged:
+            # print("Fit in pT", "with strategy", strategy, "did not converge -> ", st)
+            print("Fit did not converge", gMinuit, gMinuit.fCstatu)
+
         if (type(option["show_single_fit"]) is str and option["show_single_fit"] == "true") or (type(option["show_single_fit"]) is not str and option["show_single_fit"]):
-            can = draw_nice_canvas("fit", replace=False)
+            can = draw_nice_canvas("fit_canvas", replace=False)
             h.SetBit(TH1.kNoStats)
             h.SetBit(TH1.kNoTitle)
             h.Draw()
@@ -283,7 +319,7 @@ class HyperloopOutput:
             can.Modified()
             can.Update()
             input("Press enter to continue")
-        return fun.GetParameter(int(option["parameterindex"])), fun.GetParError(int(option["parameterindex"]))
+        return fun.GetParameter(int(option["parameterindex"])), fun.GetParError(int(option["parameterindex"])), extra
 
     def draw(self, name, x_range=None, y_range=None, opt=""):
         h = self.get(name)
@@ -308,6 +344,7 @@ class HyperloopOutput:
             t = t + " Run " + f"{self.get_run()}"
             t = t.strip()
             obj.SetTitle(t)
+        drawn_objects.append(obj)
         can.Update()
         can.Modified()
         return can
@@ -328,6 +365,7 @@ class HyperloopOutput:
         if quantity is None:
             y = 0
             ye = 0
+            extra = None
         elif quantity == "mean":
             if ytitle is not None:
                 ytitle = f"<{ytitle}>"
@@ -339,7 +377,7 @@ class HyperloopOutput:
         elif quantity == "functionfit":
             if ytitle is not None:
                 ytitle = option["treding_title"].strip("\"")
-            y, ye = self.functionfit(name, option)
+            y, ye, extra = self.functionfit(name, option)
         else:
             raise ValueError(f"Quantity {quantity} not recognized")
 
@@ -347,6 +385,8 @@ class HyperloopOutput:
             h.GetYaxis().SetTitle(ytitle)
         h.SetBinContent(ib, y)
         h.SetBinError(ib, ye)
+        if extra is not None:
+            h.GetListOfFunctions().Add(extra)
         return ib
 
     def __lt__(self, other):
@@ -394,13 +434,24 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
                              download_merged=False,
                              jobs=1,
                              key_file="/tmp/tokenkey_1000.pem",
-                             cert_file="/tmp/tokencert_1000.pem"):
+                             cert_file="/tmp/tokencert_1000.pem",
+                             list_derived_data=False):
     # Getting input for single
     l = get_run_per_run_files(train_id=hyperloop_train_id,
                               out_path=out_path,
                               list_merged_files=download_merged,
                               key_file=key_file,
                               cert_file=cert_file)
+    if list_derived_data:
+        total_list = []
+        for i in l:
+            total_list.append(i.find_derived_data())
+        print(total_list)
+        with open("/tmp/list_of_derived_data.txt", "w") as f:
+            for i in total_list:
+                for j in i:
+                    f.write(f"alien://{j}\n")
+        return ""
 
     downloaded = []
     if jobs > 1:
@@ -447,6 +498,9 @@ def main():
     parser.add_argument("--cert_file", "-c",
                         default="/tmp/tokencert_1000.pem",
                         help="Certificate file for authentication")
+    parser.add_argument("--list_derived_data", "-L", "--list_aods",
+                        action="store_true",
+                        help="List the derived data produced by an hyperloop train")
     args = parser.parse_args()
     if args.verbose:
         VERBOSE_MODE = True
@@ -462,7 +516,8 @@ def main():
                                                          tag=args.tag,
                                                          download_merged=args.download_merged,
                                                          key_file=args.key_file,
-                                                         cert_file=args.cert_file))
+                                                         cert_file=args.cert_file,
+                                                         list_derived_data=args.list_derived_data))
     print("Files downloaded:")
     print(" ".join(files_downloaded))
 

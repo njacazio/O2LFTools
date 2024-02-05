@@ -65,13 +65,18 @@ class bcolors:
     ENDC = "\033[0m"
 
 
+def msg(*args, color=bcolors.BOKBLUE):
+    print(color, *args, bcolors.ENDC)
+
+
 def vmsg(*args, color=bcolors.OKBLUE):
     if VERBOSE_MODE:
         print("** ", color, *args, bcolors.ENDC)
 
 
-def msg(*args, color=bcolors.BOKBLUE):
-    print(color, *args, bcolors.ENDC)
+def wmsg(*args):
+    color = bcolors.BWARNING
+    print("## ", color, *args, bcolors.ENDC)
 
 
 def fatal_msg(*args, fatal_message="Fatal Error!"):
@@ -93,21 +98,31 @@ def run_cmd(cmd):
     vmsg(run_result)
     return run_result
 
+
 drawn_objects = []
+
+
 class HyperloopOutput:
     def __init__(self,
                  json_entry,
                  out_path="/tmp/"):
-        self.alien_outputdir = json_entry["outputdir"]
-        self.alien_path_analysis_results = self.alien_outputdir + "/AnalysisResults.root"
-        if "run" in json_entry:
-            self.run_number = json_entry["run"]
-        else:
-            self.run_number = None
+        def get(key):
+            if key in json_entry:
+                return json_entry[key]
+            return None
+        self.alien_outputdir = get("outputdir")
+        self.alien_path_analysis_results = None
+        if self.alien_outputdir is not None:
+            self.alien_path_analysis_results = self.alien_outputdir + "/AnalysisResults.root"
+        self.dataset_name = get("dataset_name")
+        self.run_number = get("run")
         self.out_path = path.abspath(out_path)
         # ROOT interface
         self.tfile = None
         self.root_objects = {}
+
+    def get_dataset_name(self):
+        return self.dataset_name
 
     def get_alien_path(self):
         if "alien://" in self.alien_path_analysis_results:
@@ -141,6 +156,8 @@ class HyperloopOutput:
         return self.run_number
 
     def out_filename(self):
+        if self.alien_path_analysis_results is None:
+            return None
         in_path = self.alien_path_analysis_results
         file_name = path.basename(in_path)
         dir_name = path.dirname(in_path)
@@ -181,6 +198,9 @@ class HyperloopOutput:
                         write_download_summary=True,
                         overwrite=False,
                         overwrite_summary=True):
+        if self.out_filename() is None:
+            wmsg("Output filename is None, skipping download")
+            return None
         out_path = path.dirname(self.out_filename())
         if not path.isdir(out_path):
             vmsg("Preparing directory", f"`{out_path}`")
@@ -459,7 +479,10 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
             pool.map(download_file, l)
     else:
         for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
-            downloaded.append(i.copy_from_alien(overwrite=overwrite))
+            d = i.copy_from_alien(overwrite=overwrite)
+            if d is None:
+                continue
+            downloaded.append(d)
     print("Downloaded for ID", hyperloop_train_id, "=", downloaded)
     return " ".join(downloaded)
 

@@ -18,11 +18,11 @@ def main(hyperloop_train, request_run_number=None):
         if request_run_number is not None:
             if i.get_run() not in request_run_number:
                 continue
-        list_of_files.append(i.local_file_position())
+        list_of_files.append("/tmp/"+i.local_file_position())
         list_of_runs.append(f"\"Run {i.get_run()}\"")
     list_of_files = " ".join(list_of_files)
     list_of_runs = " ".join(list_of_runs)
-    print(f"{list_of_files} -t \"{list_of_runs}\"")
+    print(f"{list_of_files} -t {list_of_runs}")
     input("Press enter to continue")
 
 

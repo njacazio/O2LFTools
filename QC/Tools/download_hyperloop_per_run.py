@@ -105,16 +105,26 @@ drawn_objects = []
 class HyperloopOutput:
     def __init__(self,
                  json_entry,
+                 full_json=None,
                  out_path="/tmp/"):
+                 
         def get(key):
             if key in json_entry:
                 return json_entry[key]
             return None
+
+        def getgeneral(key):
+            if full_json is None:
+                return None
+            if key in full_json:
+                return full_json[key]
+            return None
+
         self.alien_outputdir = get("outputdir")
         self.alien_path_analysis_results = None
         if self.alien_outputdir is not None:
             self.alien_path_analysis_results = self.alien_outputdir + "/AnalysisResults.root"
-        self.dataset_name = get("dataset_name")
+        self.dataset_name = getgeneral("dataset_name")
         self.run_number = get("run")
         self.out_path = path.abspath(out_path)
         # ROOT interface
@@ -211,6 +221,7 @@ class HyperloopOutput:
             with open(path.join(out_path, "download_summary.txt"), "w") as f:
                 f.write(self.get_alien_path() + "\n")
                 f.write(f"Run{self.get_run()}\n")
+                f.write(f"Period{self.get_dataset_name()}\n")
         if not overwrite and self.exists():
             if self.is_sane():
                 msg("File", f"`{self.out_filename()}`",
@@ -436,7 +447,7 @@ def get_run_per_run_files(train_id=126264,
             fatal_msg("Cannot find key", key, "in json file", out_name)
         to_list = data[key]
         for i in to_list:
-            sub_file_list.append(HyperloopOutput(i, out_path=out_path))
+            sub_file_list.append(HyperloopOutput(i, out_path=out_path, full_json=data))
     msg("Found", len(sub_file_list), "files to download")
     if not list_merged_files:
         sub_file_list.sort()

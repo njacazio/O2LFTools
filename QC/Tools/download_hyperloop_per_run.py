@@ -107,7 +107,7 @@ class HyperloopOutput:
                  json_entry,
                  full_json=None,
                  out_path="/tmp/"):
-                 
+
         def get(key):
             if key in json_entry:
                 return json_entry[key]

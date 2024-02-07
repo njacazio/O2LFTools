@@ -13,15 +13,21 @@ import os
 
 def main(hyperloop_train,
          copy_with_period=True,
-         merged=True):
-    l = download_hyperloop_per_run.get_run_per_run_files(train_id=hyperloop_train, list_merged_files=merged)
+         runs=None,
+         merged=False):
+    l = download_hyperloop_per_run.get_run_per_run_files(train_id=hyperloop_train,
+                                                         list_merged_files=merged)
     list_of_files = []
     for i in l:
         p = i.get_dataset_name()
         if not copy_with_period:
             continue
         r = i.get_run()
-
+        if r is not None:
+            if runs is not None:
+                print(runs)
+                if r not in runs:
+                    continue
         l = i.out_filename()
         if l is None:
             continue
@@ -43,6 +49,9 @@ if __name__ == "__main__":
                         help="Train ID to consider",
                         nargs="+",
                         type=int)
+    parser.add_argument("--runs", "-r",
+                        help="Runs to consider", nargs="+", type=int, default=None)
     args = parser.parse_args()
     for i in args.hyperloop_train_ids:
-        main(i)
+        main(i,
+             runs=args.runs)

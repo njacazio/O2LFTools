@@ -84,7 +84,7 @@ def fatal_msg(*args, fatal_message="Fatal Error!"):
     raise RuntimeError(fatal_message)
 
 
-def run_cmd(cmd):
+def run_cmd(cmd, print_output=True):
     vmsg("Running command:", f"`{cmd}`")
     cmd = cmd.split()
     if DRY_MODE_RUNNING:
@@ -92,10 +92,14 @@ def run_cmd(cmd):
         return
     if "capture_output" in inspect.signature(subprocess.run).parameters:
         # Python 3.7+
-        run_result = subprocess.run(cmd, capture_output=not VERBOSE_MODE)
+        run_result = subprocess.run(cmd, capture_output=True)
     else:
         run_result = subprocess.run(cmd)
-    vmsg(run_result)
+    if print_output:
+        if run_result.stdout is not None:
+            vmsg("stdout:", run_result.stdout.decode('ascii'))
+        if run_result.stderr is not None:
+            vmsg("stderr:", run_result.stderr.decode('ascii'))
     return run_result
 
 
@@ -107,6 +111,8 @@ class HyperloopOutput:
                  json_entry,
                  full_json=None,
                  out_path="/tmp/"):
+
+        self.out_path = path.abspath(out_path)
 
         def get(key):
             if key in json_entry:
@@ -121,23 +127,63 @@ class HyperloopOutput:
             return None
 
         self.alien_outputdir = get("outputdir")
-        self.alien_path_analysis_results = None
-        if self.alien_outputdir is not None:
-            self.alien_path_analysis_results = self.alien_outputdir + "/AnalysisResults.root"
-        self.dataset_name = getgeneral("dataset_name")
         self.run_number = get("run")
-        self.out_path = path.abspath(out_path)
+        vmsg("Adding hyperloop output for run number", self.run_number)
+        self.merge_state = get("merge_state")
+        if self.merge_state != "done":
+            wmsg("Merge state for run", self.run_number, "is", self.merge_state)
+            if self.alien_outputdir is not None and self.exists() == False:
+                vmsg("Attempting to get partial merged files")
+                merge_stages = self.get_merged_stages()
+                partial_merge = None
+                for i in merge_stages:
+                    partial_merge = self.list_partial_merged_files(merge_stage=i)
+                    if partial_merge is not None:
+                        break
+                if partial_merge is not None:
+                    wmsg(f"Partial merge for run {self.run_number} found in stage {i}", "getting", partial_merge[-1])
+                    partial_merge = self.list_partial_merged_files(merge_stage=partial_merge[-1])
+                    partial_merge_file = [i for i in partial_merge if "AnalysisResults.root" in i]
+                    self.alien_outputdir += "/"+partial_merge_file[0].strip("AnalysisResults.root")
+                    self.alien_outputdir = self.alien_outputdir.replace("//", "/")
+                    self.merge_state = "partially_merged"
+
+        self.dataset_name = getgeneral("dataset_name")
         # ROOT interface
         self.tfile = None
         self.root_objects = {}
 
+    def alien_path_analysis_results(self):
+        if self.alien_outputdir is not None:
+            return self.alien_outputdir + "/AnalysisResults.root"
+        return None
+
     def get_dataset_name(self):
         return self.dataset_name
 
+    def get_merged_stages(self):
+        alien_listing = run_cmd(f"alien_ls alien://{self.alien_outputdir}", print_output=False)
+        merge_stages = []
+        for i in alien_listing.stdout.decode('ascii').split("\n"):
+            if "Stage" in i and "/" in i:
+                merge_stages.append(i)
+        merge_stages.sort()
+        merge_stages.reverse()
+        return merge_stages
+
+    def list_partial_merged_files(self, merge_stage="Stage_3/"):
+        alien_listing = run_cmd(f"alien_ls alien://{self.alien_outputdir}/{merge_stage}", print_output=False)
+        alien_listing = alien_listing.stdout.decode('ascii').split("\n")
+        alien_listing = [f"{merge_stage}/{i}" for i in alien_listing if i]
+        # print(alien_listing)
+        if len(alien_listing) == 0:
+            return None
+        return alien_listing
+
     def get_alien_path(self):
-        if "alien://" in self.alien_path_analysis_results:
-            raise RuntimeError(f"Path {self.alien_path_analysis_results} is already an alien path")
-        return "alien://" + self.alien_path_analysis_results
+        if "alien://" in self.alien_path_analysis_results():
+            raise RuntimeError(f"Path {self.alien_path_analysis_results()} is already an alien path")
+        return "alien://" + self.alien_path_analysis_results()
 
     def find_derived_data(self, merged_derived_data=True):
         cmd = f"alien_find {self.alien_outputdir} AO2D.root"
@@ -160,18 +206,29 @@ class HyperloopOutput:
         return file_list
 
     def local_file_position(self):
-        return self.alien_path_analysis_results.replace("alien://", "")
+        return self.alien_path_analysis_results().replace("alien://", "")
 
     def get_run(self):
         return self.run_number
 
     def out_filename(self):
-        if self.alien_path_analysis_results is None:
+        if self.alien_path_analysis_results() is None:
             return None
-        in_path = self.alien_path_analysis_results
+        in_path = self.alien_path_analysis_results()
         file_name = path.basename(in_path)
         dir_name = path.dirname(in_path)
-        return path.join(self.out_path, dir_name.strip("/"), file_name)
+        target_output_file = path.join(self.out_path, dir_name.strip("/"), file_name)
+        if self.merge_state == "partially_merged":
+            if "Stage" not in target_output_file:
+                fatal_msg("Cannot find Stage in", target_output_file)
+            while "//" in target_output_file:
+                target_output_file = target_output_file.replace("//", "/")
+            target_output_file = target_output_file.split("Stage_")
+            target_output_file = f"{target_output_file[0]}/AnalysisResults.root"
+            # print(target_output_file)
+        while "//" in target_output_file:
+            target_output_file = target_output_file.replace("//", "/")
+        return target_output_file
 
     def exists(self):
         f = self.out_filename()
@@ -222,6 +279,8 @@ class HyperloopOutput:
                 f.write(self.get_alien_path() + "\n")
                 f.write(f"Run{self.get_run()}\n")
                 f.write(f"Period{self.get_dataset_name()}\n")
+                if self.merge_state != "done":
+                    f.write(f"Merge state: {self.merge_state}\n")
         if not overwrite and self.exists():
             if self.is_sane():
                 msg("File", f"`{self.out_filename()}`",
@@ -237,6 +296,8 @@ class HyperloopOutput:
         run_cmd(cmd)
         if self.is_sane():
             return self.out_filename()
+        else:
+            wmsg("File", self.out_filename(), "is not sane after download")
         return None
 
     def open(self):
@@ -499,6 +560,9 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
 
 
 def main():
+    global VERBOSE_MODE
+    global DRY_MODE_RUNNING
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("hyperloop_train_ids",
                         help="Train ID to consider",
@@ -509,7 +573,7 @@ def main():
                         help="Output path where the download will be located. Default: `/tmp/`")
     parser.add_argument("--verbose", "-v",
                         action="store_true",
-                        help="Name of the file used for merge. Default: `Stage_1.xml`")
+                        help="Verbose mode")
     parser.add_argument("--drymode", "--dry", "-d",
                         action="store_true",
                         help="Drymode, avoid download and print only messages. Default: `False`")
@@ -538,6 +602,7 @@ def main():
     args = parser.parse_args()
     if args.verbose:
         VERBOSE_MODE = True
+        print("Turning on verbose mode")
     if args.drymode:
         DRY_MODE_RUNNING = True
 

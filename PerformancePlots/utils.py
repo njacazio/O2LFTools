@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from ROOT import TCanvas, TLegend, TLine, TLatex, TH1, gPad, TFile, TH2F
+from ROOT import TCanvas, TColor, TLatex, TH1, gPad, TFile, TH2F, gStyle
+import numpy as np
 
 
 nice_labels = []
@@ -19,7 +20,7 @@ def draw_nice_label(l, x=0.7, y=0.5, s=0.035, yd=0, align=11):
     return latex
 
 
-def getfromfile(filename, objname):
+def getfromfile(filename, objname=""):
     f = TFile(filename, "READ")
     obj = f.Get(objname)
     if not obj:
@@ -27,7 +28,7 @@ def getfromfile(filename, objname):
         raise ValueError("Did not find", objname, "in", filename)
     if "Directory" in obj.ClassName():
         obj.ls()
-    if "TH" in obj.ClassName():
+    if "TH" in obj.ClassName() and "Sparse" not in obj.ClassName():
         obj.SetDirectory(0)
     f.Close()
     return obj
@@ -91,6 +92,44 @@ def update_all_canvases(wait=True):
 
 
 nice_frames = {}
+
+
+def make_color_range(ncolors, simple=False):
+    if ncolors <= 0:
+        print("ncolors must be > 0")
+    if ncolors == 1:
+        simple = True
+    if simple:
+        if ncolors <= 2:
+            colors = ['#e41a1c', '#377eb8']
+        elif ncolors <= 3:
+            colors = ['#e41a1c', '#377eb8', '#4daf4a']
+        elif ncolors <= 4:
+            colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3']
+        elif ncolors < 5:
+            colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00']
+        else:
+            colors = ['#00000', '#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf']
+        # print("Using colors", colors)
+        if len(colors) < ncolors:
+            print("Not enough colors for simple", ncolors, "using, continous scale")
+            return make_color_range(ncolors=ncolors, simple=False)
+        return [TColor.GetColor(i) for i in colors]
+    NRGBs = 5
+    NCont = 256
+    NCont = ncolors
+    stops = np.array([0.00, 0.30, 0.61, 0.84, 1.00])
+    red = np.array([0.00, 0.00, 0.57, 0.90, 0.51])
+    green = np.array([0.00, 0.65, 0.95, 0.20, 0.00])
+    blue = np.array([0.51, 0.55, 0.15, 0.00, 0.10])
+    FI = TColor.CreateGradientColorTable(NRGBs,
+                                         stops, red, green, blue, NCont)
+    colors = []
+    for i in range(NCont):
+        colors.append(FI + i)
+    colors = np.array(colors, dtype=np.int32)
+    gStyle.SetPalette(NCont, colors)
+    return [int(i) for i in colors]
 
 
 def set_nice_frame(h):

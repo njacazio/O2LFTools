@@ -549,12 +549,11 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
     if jobs > 1:
         with Pool() as pool:
             pool.map(download_file, l)
-    else:
-        for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
-            d = i.copy_from_alien(overwrite=overwrite)
-            if d is None:
-                continue
-            downloaded.append(d)
+    for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
+        d = i.copy_from_alien(overwrite=overwrite)
+        if d is None:
+            continue
+        downloaded.append(d)
     print("Downloaded for ID", hyperloop_train_id, "=", downloaded)
     return " ".join(downloaded)
 

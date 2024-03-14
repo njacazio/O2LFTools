@@ -11,9 +11,10 @@ if 1:
 from numpy import sqrt
 
 
-def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma.root",
+def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma_AllPIDs.root",
+                    "/tmp/perf-k0s-resolution_h2_masspTsigma.root",
                     "/tmp/perf-k0s-resolution_h2_masspTsigma_yesTOF.root"],
-         tags=["Standard", "Daughter with TOF"]):
+         tags=["Standard", "Pion PID", "Daughter with TOF"]):
 
     canvases = []
     for i in filenames:
@@ -61,7 +62,7 @@ def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma.root",
             continue
         for idx, j in enumerate(per_tag[i]):
             j = j.DrawClone("LPSAME")
-            j.SetTitle(j.GetTitle()+ "/" + per_tag[firsttag][idx].GetTitle())
+            j.SetTitle(j.GetTitle() + "/" + per_tag[firsttag][idx].GetTitle())
             legratio.AddEntry(j)
             for k in range(j.GetN()):
                 x = j.GetX()[k]

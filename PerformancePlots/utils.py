@@ -20,10 +20,17 @@ def draw_nice_label(l, x=0.7, y=0.5, s=0.035, yd=0, align=11):
     return latex
 
 
-def getfromfile(filename, objname=""):
+def getfromfile(filename, objname="", alternatives=None):
     f = TFile(filename, "READ")
+    if type(objname) is int:
+        objname = f.GetListOfKeys().At(objname).GetName()
     obj = f.Get(objname)
     if not obj:
+        if alternatives is not None:
+            if type(alternatives) is not list:
+                alternatives = [alternatives]
+            print("Trying alternatives to", objname, "trying", alternatives[0], "in", alternatives)
+            return getfromfile(filename, objname=alternatives.pop(0), alternatives=alternatives)
         f.ls()
         raise ValueError("Did not find", objname, "in", filename)
     if "Directory" in obj.ClassName():

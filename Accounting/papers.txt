@@ -1,0 +1,1174 @@
+Production of ϕ-meson pairs in pp collisions at s√=5TeV and s√=7TeV
+with the ALICE detector
+
+    Paper Committee: Nicola Rubini, Roberto Preghenella
+    Created : 2024-02-28
+    Status: In preparation (Round:0)     
+
+Strangeness enhancement at its extremes: multiple (multi-)strange hadron production in pp collisions at s√
+= 5.02 TeV
+
+    Paper Committee: Sara Pucillo, Livio Bianchi
+    Created : 2024-02-28
+    Status: In preparation (Round:0)     
+
+First measurement of (anti)hypernuclei of A=4 at the LHC
+
+    Paper Committee: Janik Ditzel, Benjamin Donigus, Michael Volker Hartung
+    Created : 2024-02-23
+    Status: In preparation (Round:0)     
+
+Measurement of f1
+(1285) production cross section in pp collisions at \s = 13 TeV
+
+    Paper Committee: Prottay Das, Sourav Kundu, Bedangadas Mohanty
+    Created : 2024-02-21
+    Status: In preparation (Round:0)     
+
+Deuteron coalescence probability in jets in p-Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Marika Rasa, Chiara Pinto, Alberto Caliva, Ramona Lea, Paola La Rocca
+    Created : 2024-01-25
+    Status: In preparation (Round:0)     
+
+Σ¯±
+production in pp and p-Pb collisions at s√=5.02
+TeV
+
+    Paper Committee: Pavel Gordeev, Nicolo Jacazio, Dmitry Yurevich Peresunko, Dmitry Blau
+    Created : 2024-01-20
+    Status: In preparation (Round:0)     
+
+Centrality dependence of strange hadron production in Pb--Pb collisions at sNN−−−−√ = 5.02 TeV
+
+    Paper Committee: Livio Bianchi, Maria Barlou, Gabriel Garcia Guardiano, Stefania Bufalino
+    Created : 2023-12-18
+    Status: In preparation (Round:0)     
+
+Rapidity dependence of antideuteron coalescence in pp collisions at s√
+= 13 TeV with ALICE
+
+    Paper Committee: Chiara Pinto, Alberto Caliva, Maximilian Horst, Ramona Lea, Nicolo Jacazio
+    Created : 2023-10-13
+    Status: Under IRC Review (Round:1)     
+
+\Sigma^{+} production in pp collisions at the LHC
+
+    Paper Committee: Benedict Heybeck, Benjamin Donigus
+    Created : 2023-08-24
+    Status: Under IRC Review (Round:1)     
+
+Observation of the Ω
+(2012) baryon at the LHC
+
+    Paper Committee: Anders Garritt Knospe, Rene Bellwied
+    Created : 2023-07-29
+    Status: Under IRC Review (Round:1)     
+
+Measurement of hypertriton production in Pb-Pb collision at sNN−−−−√
+= 5.02 TeV
+
+    Paper Committee: Yuanzhe Wang, Francesco Mazzaschi, Qiye Shou, Maximiliano Puccio
+    Created : 2023-06-14
+    Status: Under IRC Review (Round:1)     
+
+(Anti)nuclei production and flow in Xe--Xe collisions at sNN−−−√=
+5.44 TeV
+
+    Paper Committee: Chiara Pinto, Alberto Caliva, Ramona Lea
+    Created : 2023-05-30
+    Status: Closed for comments (Round:1)     
+    Previous Collaboration reviews closed on: Round: 1 - Feb 20, 2024
+    2024-02-19 
+
+First observation of strange baryon enhancement with effective energy in pp collisions at the LHC
+
+    Paper Committee: Francesca Ercolessi, Francesco Noferini, Alberto Caliva, Livio Bianchi
+    Created : 2023-05-29
+    Status: In preparation (Round:0)     
+
+Multiplicity dependence of Λ(1520)
+resonance production in pp collisions at s√
+= 5.02 and 13 TeV
+
+    Paper Committee: Sonali Padhan, Sadhana Dash, Alberto Caliva
+    Created : 2023-04-14
+    Status: Under IRC Review (Round:1)     
+
+Measurement of Λ(1520)
+in Pb-Pb collisions at sNN−−−−√
+= 5.02 TeV
+
+    Paper Committee: Neelima Agrawal, Roberto Preghenella, Francesca Bellini
+    Created : 2023-04-05
+    Status: In preparation (Round:0)     
+
+Measurements of chemical potentials in Pb-Pb collisions at sNN−−−√
+=5.02 TeV
+
+    Paper Committee: Mario Ciacco, Maximiliano Puccio, Francesco Mazzaschi, Massimo Masera
+    Created : 2023-02-17
+    Status: Submitted (Round:1)    arXiv 
+    Previous Collaboration reviews closed on: Round: 1 - Oct 21, 2023 Round: 2 - Nov 21, 2023
+    2023-11-20 
+
+Investigating strangeness enhancement in pp collisions using angular correlations
+
+    Paper Committee: Chiara De Martin, Ramona Lea, Paolo Camerini
+    Created : 2022-12-02
+    Status: Closed for comments (Round:1)     
+    Previous Collaboration reviews closed on: Round: 1 - Feb 10, 2024
+    2024-02-09 
+
+System size dependence of hadronic rescattering effect at LHC energies
+
+    Paper Committee: Prottay Das, Sourav Kundu, Ranbir Singh, Bedangadas Mohanty
+    Created : 2022-10-13
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 109, 014911 (2024)
+    Previous Collaboration reviews closed on: Round: 1 - May 25, 2023 Round: 2 - Aug 16, 2023
+    2023-08-15 
+
+Anti(alpha) production in Pb-Pb collisions at sNN−−−−√=5
+TeV
+
+    Paper Committee: Esther Bartsch, Benjamin Donigus
+    Created : 2022-09-21
+    Status: Submitted (Round:1)    arXiv 
+    Previous Collaboration reviews closed on: Round: 1 - Aug 1, 2023 Round: 2 - Nov 5, 2023
+    2023-11-04 
+
+Wave-function tomography: hypertriton the ultimate halo nucleus
+
+    Paper Committee: Michael Volker Hartung, Benjamin Donigus, Janik Ditzel, Harald Appelshaeuser
+    Created : 2022-09-14
+    Status: In preparation (Round:0)     
+
+Measurement of the low-energy antitriton inelastic cross section
+
+    Paper Committee: Chiara Pinto, Stephan Alexander Konigstorfer - Old member, Ivan Vorobyev, Manuel Colocci
+    Created : 2022-09-12
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 848 (2024) 138337
+    Previous Collaboration reviews closed on: Round: 1 - Feb 17, 2023 Round: 2 - May 3, 2023
+    2023-05-02 
+
+Multiplicity dependence of K*(892) ± production in pp collisions at √s = 13 TeV
+
+    Paper Committee: Giuseppe Mandaglio, Antonina Rosano - Old member, Angela Badala
+    Created : 2022-08-31
+    Status: Closed for comments (Round:1)     
+    Previous Collaboration reviews closed on: Round: 1 - Feb 9, 2024
+    2024-02-08 
+
+K∗±
+production in Pb-Pb collisions at 5.02 TeV
+
+    Paper Committee: Ranbir Singh, Prottay Das, Bedangadas Mohanty
+    Created : 2022-08-31
+    Status: Accepted (Round:1)    arXiv 
+    Previous Collaboration reviews closed on: Round: 1 - Jun 8, 2023 Round: 2 - Aug 15, 2023
+    2023-08-14 
+
+Observation of abnormal suppression of f0
+(980) production in p--Pb collisions at sNN−−−√
+= 5.02~TeV
+
+    Paper Committee: Junlee Kim, Eun Joo Kim, Sanghoon Lim, Beomkyu Kim
+    Created : 2022-06-18
+    Status: Submitted (Round:1)    arXiv 
+    Previous Collaboration reviews closed on: Round: 1 - Aug 30, 2023 Round: 2 - Nov 8, 2023
+    2023-11-07 
+
+Multiplicity dependence of charged-particle production in pp, p--Pb, Xe--Xe and Pb--Pb collisions at the LHC
+
+    Paper Committee: Mario Kruger, Patrick Huhn, Kai Oliver Schweda, Anton Andronic
+    Created : 2022-05-02
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 845 (2023) 138110
+    Previous Collaboration reviews closed on: Round: 1 - Sep 13, 2022 Round: 2 - Nov 11, 2022
+    2022-11-10 
+
+Light (anti)nuclei production in Pb-Pb collisions at 5.02 TeV
+
+    Paper Committee: Bong-Hwi Lim, Alexander Philipp Kalweit, Benjamin Donigus, Esther Bartsch, Maximiliano Puccio
+    Created : 2022-02-22
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 107 (2023) 064904
+    Previous Collaboration reviews closed on: Round: 1 - Sep 1, 2022 Round: 2 - Nov 15, 2022
+    2022-11-14 
+
+Enhanced deuteron coalescence probability in jets
+
+    Paper Committee: Chiara Pinto, Alberto Caliva, Ramona Lea, Valentina Zaccolo, Paola La Rocca
+    Created : 2022-02-15
+    Status: Under IRC Review (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 131 (2023) 042301
+    Previous Collaboration reviews closed on: Round: 1 - Aug 30, 2022 Round: 2 - Nov 18, 2022 Round: 3 - Feb 3, 2024
+    2024-02-02 
+
+Measurement of 3ΛH
+lifetime and Λ
+separation energy
+
+    Paper Committee: Francesco Mazzaschi, Maximiliano Puccio, Stefania Bufalino, Alberto Caliva, Pietro Fecchio - Old member, Mario Ciacco
+    Created : 2022-01-17
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 131 (2023) 102302
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 6, 2022
+    Round: 2 - Sep 8, 2022
+    2022-09-07 
+
+Investigating Strangeness Enhancement in Jet and Medium via ɸ(1020) production
+
+    Paper Committee: Justin Thomas Blair - Old member, Christina Markert, Lee Stuart Barnby
+    Created : 2021-12-18
+    Status: Closed for comments (Round:1)     
+    Previous Collaboration reviews closed on: Round: 1 - Feb 24, 2024
+    2024-02-23 
+
+Measurement of the Λ
+hyperon lifetime
+
+    Paper Committee: Alberto Caliva, Maximiliano Puccio, Francesco Mazzaschi, Pietro Fecchio - Old member
+    Created : 2021-12-15
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. D 108 (2023) 032009
+    Previous Collaboration reviews closed on: Round: 1 - Oct 4, 2022 Round: 2 - Jan 21, 2023
+    2023-01-20 
+
+Identified light flavor particle production in "jetty" and "isotropic" pp collisions at (√s) = 13 TeV with ALICE at the LHC.
+
+    Paper Committee: Adrian Fereydon Nassirpour, Peter Christiansen, Oliver Matonoha, Omar Vazquez Rueda, Rutuparna Rath, Sumit Basu, Raghunath Sahoo
+    Created : 2021-11-26
+    Status: Submitted (Round:1)    arXiv 
+    Previous Collaboration reviews closed on: Round: 1 - Jun 28, 2023 Round: 2 - Aug 24, 2023
+    2023-08-23 
+
+Multiplicity and rapidity dependence of K*(892)0
+and ϕ(1020) production in p-Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Dukhishyam Mallick, Sandeep Dudi, Bedangadas Mohanty, Lokesh Kumar
+    Created : 2021-11-18
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 83 (2023) 540
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 1, 2022
+    Round: 2 - Mar 22, 2022
+    2022-03-21 
+
+Production of f0(980) in inelastic pp collisions at s√
+= 5.02 TeV
+
+    Paper Committee: Francesca Bellini, Neelima Agrawal, Sushanta Tripathy, Roberto Preghenella
+    Created : 2021-10-12
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 846 (2023) 137644
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 13, 2022
+    Round: 2 - Jun 11, 2022
+    2022-06-10 
+
+Σ(1385)±
+resonance production in Pb--Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Paraskevi Ganoti, Francesca Bellini, Enrico Fragiacomo, Alexander Philipp Kalweit
+    Created : 2021-05-27
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 83 (2023) 351
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 2, 2022
+    Round: 2 - May 17, 2022
+    2022-05-16 
+
+Measurement of 3He¯¯¯¯¯¯
+nuclei absorption in matter and impact on their propagation in the galaxy
+
+    Paper Committee: Ivan Vorobyev, Manuel Colocci, Laura Fabbietti, Alexander Philipp Kalweit, Stephan Alexander Konigstorfer - Old member, Pavel Larionov, Maximiliano Puccio, Laura Serksnyte
+    Created : 2021-05-10
+    Status: Published (Round:1)  Publication link  arXiv 
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Oct 29, 2021
+    Round: 2 - Dec 22, 2021
+    2021-12-21 
+
+Production of light (anti)nuclei in pp collisions at s√=
+5 TeV
+
+    Paper Committee: Luca Barioglio, Alessandro Balbino, Stefania Bufalino, Maximiliano Puccio
+    Created : 2021-04-07
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 82, 289 (2022)
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 28, 2021
+    Round: 2 - Nov 23, 2021
+    2021-11-22 
+
+Production of light (anti)nuclei in pp collisions at s√=
+13 TeV
+
+    Paper Committee: Luca Barioglio, Alberto Caliva, Michael Karim Habib - Old member, Zafar Yasin, Bilal Javed Mughal - Old member, Bhawani Singh
+    Created : 2021-03-18
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: JHEP 01 (2022) 106
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 15, 2021
+    Round: 2 - Sep 2, 2021
+    2021-09-01 
+
+Measurement of 3ΛH
+production in p-Pb collisions
+
+    Paper Committee: Francesco Mazzaschi, Maximiliano Puccio, Pietro Fecchio - Old member, Massimo Masera
+    Created : 2021-02-15
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 128 (2022) 252003
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jun 12, 2021
+    Round: 2 - Jul 14, 2021
+    2021-07-13 
+
+Measurement of (anti)nuclei production in p-Pb collisions at sNN−−−−√
+= 8.16 TeV
+
+    Paper Committee: Chiara Pinto, Alberto Caliva, Francesco Riggi, Paola La Rocca, Silvia Pisano
+    Created : 2020-12-11
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 846 (2023) 137795
+    Previous Collaboration reviews closed on: Round: 1 - Apr 10, 2021 Round: 2 - Nov 4, 2021 Round: 3 - Nov 29, 2022
+    2022-11-28 
+
+Multiplicity dependence of Σ(1385)±
+and Ξ(1530)0 production in pp collisions at s√
+=13TeV
+
+    Paper Committee: Jihye Song, Bong-Hwi Lim, Beomkyu Kim, Enrico Fragiacomo, In Kwon Yoo
+    Created : 2020-11-06
+    Status: Submitted (Round:1)    arXiv 
+    Previous Collaboration reviews closed on: Round: 1 - Mar 23, 2022 Round: 2 - Jul 17, 2023
+    2023-07-16 
+
+Multiplicity dependence of (multi-)strange hadrons production in proton-proton collisions at √s = 5.02 TeV
+
+    Paper Committee: Silvia Delsanto, Livio Bianchi, Edith Zinhle Buthelezi, Siegfried Valentin Foertsch
+    Created : 2020-10-22
+    Status: In preparation (Round:0)     
+
+Production of pions, kaons, protons and phi-mesons in Xe–Xe collisions at √sNN = 5.44 TeV
+
+    Paper Committee: Nicolo Jacazio, Francesca Bellini, Alexander Philipp Kalweit, Sadia Marium - Old member, Ivan Ravasenga, Martha Spyropoulou-Stassinaki
+    Created : 2020-09-17
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 81 (2021) 584
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Nov 21, 2020
+    Round: 2 - Dec 22, 2020
+    2020-12-21 
+
+Measurement of low-energy antideuteron inelastic cross section
+
+    Paper Committee: Ivan Vorobyev, Laura Fabbietti, Maximiliano Puccio
+    Created : 2020-02-10
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 125 (2020) 162001
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Apr 18, 2020
+    Round: 2 - May 13, 2020
+    Round: 3 - Jun 16, 2020
+
+K*(892)0
+and ϕ(1020) production in p-Pb collisions at sNN−−−√
+= 8.16 TeV
+
+    Paper Committee: Ranbir Singh, Dukhishyam Mallick, Sandeep Dudi, Bedangadas Mohanty, Lokesh Kumar
+    Created : 2020-01-20
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 107 (2023) 055201
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jun 22, 2021
+    Round: 2 - Sep 25, 2021
+    2021-09-24 
+
+Elliptic and triangular flow of (anti-)deuterons in Pb--Pb collisions at sNN−−−√
+~=~5.02~TeV
+
+    Paper Committee: Ramona Lea, Alberto Caliva, Paolo Camerini
+    Created : 2019-11-20
+    Status: Published (Round:2)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 102 (2020) 055203
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Apr 21, 2020
+    Round: 2 - May 28, 2020
+
+Evidence of spin-orbital angular momentum interactions in relativistic heavy-ion collisions
+
+    Paper Committee: Bedangadas Mohanty, Sourav Kundu, Ajay Kumar Dash, Ranbir Singh
+    Created : 2019-07-31
+    Status: Published (Round:6)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 125 (2020) 012301
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Oct 8, 2019
+    Round: 2 - Oct 21, 2019
+    Round: 3 - Oct 30, 2019
+
+Measurement of the (anti-)3
+He elliptic flow in Pb--Pb collisions at sNN−−−√
+= 5.02 TeV with ALICE at the LHC
+
+    Paper Committee: Alberto Caliva, Ramona Lea, Sebastian Hornung - Old member, Kai Oliver Schweda
+    Created : 2019-03-24
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: PLB 805 (2020) 135414
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 24, 2019
+    Round: 2 - Jun 19, 2019
+
+(Anti-)Deuteron production in pp collisions at s√=13
+TeV
+
+    Paper Committee: Maximiliano Puccio, Luca Barioglio, Lokesh Kumar, Natasha Sharma, Massimo Masera
+    Created : 2019-02-07
+    Status: Published (Round:2)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 80 (2020) 889
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Sep 18, 2019
+    Round: 2 - Oct 19, 2019
+
+Jet-associated deuteron production in pp collisions at s√
+= 13 TeV
+
+    Paper Committee: Constantinos Loizides, Brennan Schaefer - Old member
+    Created : 2018-12-12
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 819 (2021) 136440
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jan 26, 2019
+    Round: 2 - Oct 28, 2020
+    2020-10-27 
+
+Production of (anti-)3
+He and (anti-)3H in p--Pb collisions at sNN−−−−√
+= 5.02 TeV measured with the ALICE detector
+
+    Paper Committee: Sebastian Hornung - Old member, Kai Oliver Schweda, Alberto Caliva
+    Created : 2018-12-06
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 101 (2020) 044906
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 5, 2019
+    Round: 2 - Sep 30, 2019
+    Round: 3 - Feb 27, 2020
+
+Multiplicity dependence of π/K/p production in pp collisions at 13 TeV
+
+    Paper Committee: Vytautas Vislavicius - Old member, Ivan Ravasenga, Pranjal Sarma, Paraskevi Ganoti, Omar Vazquez Rueda
+    Created : 2018-11-09
+    Status: Published (Round:2)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 80 (2020) 693
+    Previous Collaboration reviews closed on:
+
+    Round: 2 - Feb 13, 2020
+
+Production of K∗(892)0
+and ϕ(1020) in pp and Pb-Pb collisions at sNN−−−−√
+= 5.02 TeV
+
+    Paper Committee: Bedangadas Mohanty, Ajay Kumar Dash, Ranbir Singh, Sushanta Tripathy, Chitrasen Jena
+    Created : 2018-07-30
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 106 (2002) 034907
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 1, 2020
+    Round: 2 - Apr 21, 2021
+    2021-04-20 
+
+Evidence of rescattering effect in Pb--Pb collisions at the LHC through production of K*(890) and phi(1020) mesons
+
+    Paper Committee: Bedangadas Mohanty, Ajay Kumar Dash, Ranbir Singh, Chitrasen Jena, Sushanta Tripathy
+    Created : 2018-07-30
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: PLB 802 (2020) 135225
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Sep 17, 2019
+    Round: 2 - Oct 17, 2019
+
+3ΛH
+and 3Λ¯¯¯H¯¯¯¯ lifetime measurement in Pb-Pb collisions at sNN−−−√=
+5.02 TeV via 2-body decay
+
+    Paper Committee: Stefano Trogolo, Benjamin Donigus, Stefania Bufalino, Elena Botta
+    Created : 2018-07-19
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys.Lett. B797 (2019) 134905
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 5, 2019
+    Round: 2 - Jul 3, 2019
+
+Measurement of K*(892)+- production in inelastic pp collisions at the LHC
+
+    Paper Committee: Angela Badala, Raghunath Sahoo, Kunal Garg - Old member, Pragati Sahoo - Old member, Sudipan De
+    Created : 2018-05-01
+    Status: Published (Round:1)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 828 (2022) 137013
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 16, 2020
+    Round: 2 - May 5, 2021
+    2021-05-04 
+
+Multiplicity dependence of (anti-)deuteron production in pp collisions at √s = 7 TeV
+
+    Paper Committee: Manuel Colocci, Pietro Antonioli, Francesca Bellini, Francesco Noferini
+    Created : 2018-02-23
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 794 (2019) 50-63
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Sep 7, 2018
+    Round: 2 - Nov 24, 2018
+    Round: 3 - Feb 21, 2019
+
+K∗(892)0
+and ϕ(1020) production at mid-rapidity in pp collisions at s√
+= 8 TeV
+
+    Paper Committee: Raghunath Sahoo, Arvind Khuntia, Sushanta Tripathy, Anders Garritt Knospe, Dukhishyam Mallick
+    Created : 2018-01-28
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 102 (2020) 024912
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Feb 22, 2019
+    Round: 2 - Jun 12, 2019
+    Round: 3 - Oct 5, 2019
+
+Multiplicity dependence of K(892)0 and phi(1020) production in pp collisions at 13 TeV
+
+    Paper Committee: Anders Garritt Knospe, Sourav Kundu
+    Created : 2018-01-28
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: PLB 807 (2020) 135501
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 31, 2019
+    Round: 2 - Oct 16, 2019
+    Round: 3 - Mar 17, 2020
+
+Analysis of the apparent nuclear modification in peripheral Pb--Pb collisions at sqrt(s_NN) = 5.02 TeV
+
+    Paper Committee: Michael Linus Knichel - Old member, Constantinos Loizides, Jan Fiete Grosse-Oetringhaus
+    Created : 2017-12-05
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys.Lett. B793 (2019) 420-432
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Apr 25, 2018
+    Round: 2 - May 11, 2018
+
+Transverse momentum distributions and nuclear modification factor in Xe-Xe collisions at sqrt(s_NN) = 5.44 TeV
+
+    Paper Committee: Kai Oliver Schweda, Michael Linus Knichel - Old member, Julius Maximilian Gronefeld - Old member, Edgar Perez Lezama - Old member, Michael Karim Habib - Old member, Patrick Huhn, Mario Kruger
+    Created : 2017-12-05
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 788 (2019) 166-179
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Feb 16, 2018
+    Round: 2 - Apr 21, 2018
+
+Charged-particle production as a function of multiplicity and transverse spherocity in pp collisions at s√=5.02
+and 13 TeV
+
+    Paper Committee: Guy Paic, Arturo Fernandez Tellez, Antonio Ortiz Velasquez, Eleazar Cuautle Flores - Old member, Hector Bello Martinez - Old member
+    Created : 2017-11-27
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 79 (2019) 857
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Dec 9, 2018
+    Round: 2 - Apr 13, 2019
+
+Centrality dependence of strange particle production in Pb-Pb collisions at 2.76 and 5.02 TeV
+
+    Paper Committee: Jun Takahashi, David Dobrigkeit Chinellato, Marek Bombara, Michal Sefcik - Old member, Danilo Silva De Albuquerque - Old member
+    Created : 2017-11-10
+    Status: Withdrawn (Round:1)     
+
+Production of π,K,p in pp and Pb-Pb collisions at sNN−−−−√
+= 5.02 TeV
+
+    Paper Committee: Giacomo Volpe, Yasser Corrales Morales, Nur Hussain, Nicolo Jacazio, Antonio Ortiz Velasquez, Ivan Ravasenga, Omar Vazquez Rueda
+    Created : 2017-09-14
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 101, 044907 (2020)
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 4, 2019
+    Round: 2 - Aug 12, 2019
+
+Measurement of Λ
+(1520) production in pp collisions at s√ =7 TeV and p–Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Bedangadas Mohanty, Rama Chandra Baral - Old member, Sarita Sahoo, Pradip Kumar Sahu
+    Created : 2017-05-06
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 80 (2020) 160
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 28, 2019
+    Round: 2 - Aug 1, 2019
+
+Suppression of Λ(1520)
+resonance production in central Pb-Pb collisions at sNN−−−√
+= 2.76 TeV
+
+    Paper Committee: Neelima Agrawal, Roberto Preghenella, Sadhana Dash
+    Created : 2017-05-04
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 99, 024905
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 30, 2018
+    Round: 2 - May 2, 2018
+
+Sigma0 and anti-Sigma0 Production in pp Collisions at s = 7 TeV at the LHC with ALICE
+
+    Paper Committee: Alexander Borissov, Angela Badala, In Kwon Yoo, Jihye Song
+    Created : 2017-05-02
+    Status: Under IRC Review (Round:1)     
+
+Multiplicity dependence of strange and multi-strange hadron production in pp collisions at √s = 13 TeV
+
+    Paper Committee: Fiorella Fionda, Paolo Bartalini - Old member, Prabhakar Palni - Old member, Michele Floris - Old member
+    Created : 2017-03-10
+    Status: Published (Round:3)  Publication link  arXiv 
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 21, 2018
+    Round: 2 - Jul 24, 2019
+
+Production of light flavor hadrons in pp collisions at s√ = 7 and s√ = 13TeV
+
+    Paper Committee: Gyula Bencedi, Yasser Corrales Morales, Peter Kalinak, Anders Garritt Knospe, Sourav Kundu, Domenico Colella, Vytautas Vislavicius - Old member
+    Created : 2017-02-09
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 81 (2021) 256
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Oct 25, 2019
+    Round: 2 - Feb 22, 2020
+    Round: 3 - Apr 12, 2020
+
+ρ
+(770) production in pp and Pb-Pb collisions at sNN−−−−√
+= 2.76 TeV
+
+    Paper Committee: Viktor Riabov, Francesca Bellini, Anders Garritt Knospe, Mikhail Malaev
+    Created : 2016-10-27
+    Status: Published (Round:4)    arXiv 
+    Article reference: Phys. Rev. C 99, 064901 (2019).
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jan 11, 2018
+    Round: 1 - Apr 5, 2018
+
+Measurement of deuteron spectra and elliptic flow in Pb--Pb collisions at sNN−−−√
+= 2.76 TeV at the LHC
+
+    Paper Committee: Ramona Lea, Maximiliano Puccio, Francesco Barile, Massimo Masera, Stefano Piano
+    Created : 2016-06-15
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 77 (2017) 658
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 18, 2017 Round: 2 - Jun 20, 2017
+
+Production of Σ(1385)±
+and Ξ(1530)0 in p--Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Enrico Fragiacomo, In Kwon Yoo, Jihye Song, Alexander Borissov
+    Created : 2016-01-11
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 77 (2017) 389
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Oct 26, 2016 Round: 2 - Jan 12, 2017
+
+Centrality dependence of the pseudorapidity density distribution for charged particles in Pb-Pb collisions at sNN−−−√=5.02
+TeV
+
+    Paper Committee: Christian Holm Christensen, Kristjan Herlache Gulbrandsen, Lais Ozelin De Lima Pimentel - Old member
+    Created : 2015-12-18
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 772 (2017) 567-577
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Nov 24, 2016 Round: 2 - Dec 23, 2016
+
+Nuclear modification of strange and multi-strange hadrons in Pb-Pb collisions at sqrt(sNN) = 2.76 TeV
+
+    Paper Committee: Simone Schuchmann - Old member, Domenico Colella, Domenico Elia, Harald Appelshaeuser, Maria Nicassio - Old member
+    Created : 2015-12-03
+    Status: Withdrawn (Round:3)     
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 10, 2017
+
+Multiplicity dependence of light flavor hadron production in proton-proton collisions at √s = 7 TeV
+
+    Paper Committee: David Dobrigkeit Chinellato, Alexander Philipp Kalweit, Ajay Kumar Dash, Amalia Pop, Andrei Ionut Herghelegiu, Cristian Andrei, Kishora Nayak - Old member, Mihai Petrovici, Nicolo Jacazio, Ranbir Singh, Vytautas Vislavicius - Old member
+    Created : 2015-12-03
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 99, 024906
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Apr 27, 2018
+    Round: 2 - Jul 20, 2018
+
+Transverse momentum spectra and nuclear modification factors of charged particles in pp, p-Pb and Pb-Pb collisions at the LHC
+
+    Paper Committee: Jacek Tomasz Otwinowski, Alberica Toia, Marian Ivanov, Michael Linus Knichel - Old member, Julius Maximilian Gronefeld - Old member, Edgar Perez Lezama - Old member
+    Created : 2015-11-26
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: JHEP 1811 (2018) 013
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Dec 8, 2017
+    Round: 2 - Feb 9, 2018
+
+Centrality dependence of the charged-particle multiplicity density at mid-rapidity in Pb-Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Lee Stuart Barnby, Alberica Toia, Valentina Zaccolo, Roberto Preghenella
+    Created : 2015-11-16
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 116 (2016) 222302
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Dec 8, 2015
+
+Multiplicity-dependent enhancement of strange and multi-strange hadron production in proton-proton collisions at √s = 7 TeV
+
+    Paper Committee: Roberto Preghenella, David Dobrigkeit Chinellato, Livio Bianchi, Rafael Derradi De Souza - Old member
+    Created : 2015-10-16
+    Status: Published (Round:6)  Publication link  arXiv 
+    Article reference: Nature Physics 13 (2017) 535-539
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 4, 2016 Round: 2 - Jun 7, 2016 Round: 3 - Sep 17, 2016
+
+Pseudorapidity and transverse-momentum distribution of charged particles in proton-proton collisions at √s = 13 TeV
+
+    Paper Committee: Roberto Preghenella, Anton Andronic, Taesoo Kim - Old member, Beomkyu Kim, Julius Maximilian Gronefeld - Old member, Edgar Perez Lezama - Old member
+    Created : 2015-08-14
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 753 (2016) 319-329
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Sep 22, 2015
+    Round: 2 - Sep 29, 2015
+
+Thermal Fits with ALICE data
+
+    Paper Committee: Michele Floris - Old member, Boris Hippolyte, Anton Andronic, Benjamin Donigus
+    Created : 2015-06-03
+    Status: Withdrawn (Round:0)     
+
+Production of 4
+He and anti-4He in Pb--Pb collisions at sNN−−−−√
+=2.76 TeV at the LHC
+
+    Paper Committee: Nicole Alice Martin - Old member, Peter Braun-Munzinger, Benjamin Donigus
+    Created : 2015-05-26
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Nucl. Phys. A 971 (2018) 1-20
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 13, 2017
+    Round: 2 - Sep 21, 2017
+
+Centrality evolution of the charged-particle pseudorapidity density over a broad pseudorapidity range in Pb-Pb at sqrt(sNN) = 2.76TeV
+
+    Paper Committee: Christian Holm Christensen, Marek Chojnacki - Old member, Ruben Shahoyan
+    Created : 2015-05-21
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 754 (2016) 373-385
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 29, 2015 Round: 2 - Sep 20, 2015
+
+Multi-strange baryon production in p-Pb collisions at sNN−−−−√=5.02
+
+    Paper Committee: Didier Alexandre - Old member, Lee Stuart Barnby, David Dobrigkeit Chinellato, Roman Lietava
+    Created : 2015-03-05
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 758 (2016) 389-401
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 29, 2015 Round: 2 - Dec 5, 2015
+
+Multiplicity Dependence of (Anti-)Deuteron Production in p--Pb Collisions at (s_NN)^1/2 = 5.02 TeV
+
+    Paper Committee: Alexander Philipp Kalweit, Jonas Anielski - Old member, Benjamin Donigus, Natasha Sharma, Maximiliano Puccio
+    Created : 2015-01-26
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys.Lett. B800 (2020) 135043
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Oct 26, 2016
+    Round: 2 - May 14, 2019
+
+Multiplicity dependence of charged pion, kaon, and (anti)proton production at large transverse momentum in p-Pb collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Antonio Ortiz Velasquez, Peter Christiansen, Gyula Bencedi, Giacomo Volpe
+    Created : 2014-12-18
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 760 (2016) 720
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 29, 2015 Round: 2 - Jan 5, 2016
+
+Measurement of transverse energy at midrapidity in Pb-Pb collisions at sNN−−−√=2.76
+TeV
+
+    Paper Committee: Christine Nattrass, David Olle Rickard Silvermyr, Soren Pontoppidan Sorensen
+    Created : 2014-11-20
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 94 (2016) 034903
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Dec 10, 2015 Round: 2 - Feb 28, 2016
+
+K∗0
+and ϕ meson production at high transverse momentum in pp and Pb-Pb collisions at sNN−−−−√
+= 2.76 TeV
+
+    Paper Committee: Bedangadas Mohanty, Kishora Nayak - Old member, Viktor Riabov, Martin Vala, Anders Garritt Knospe
+    Created : 2014-10-15
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 95 (2017) 064606
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Aug 13, 2016
+    Round: 2 - Jan 10, 2017
+
+Production of K(892)∗0
+and ϕ(1020) in p-Pb collisions at sNN−−−−√
+= 5.02 TeV
+
+    Paper Committee: Francesca Bellini, Ajay Kumar Dash, Mikhail Malaev, Edgar Perez Lezama - Old member
+    Created : 2014-09-24
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 76 (2016) 245
+    Previous Collaboration reviews closed on:
+
+    Round: 2 - Aug 22, 2015 Round: 2 - Dec 20, 2015
+
+Centrality dependence of the nuclear modification factor of charged pions, kaons, and protons in Pb-Pb collisions at sqrt(sNN) = 2.76 TeV
+
+    Paper Committee: Peter Christiansen, Antonio Ortiz Velasquez, Marian Ivanov, Giacomo Volpe
+    Created : 2014-09-09
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 93 (2016) 034913
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 30, 2015 Round: 2 - Jun 13, 2015
+    Round: 4 - Oct 29, 2015
+    Round: 4 - Nov 8, 2015
+
+Precision measurement of the mass difference between light nuclei and anti-nuclei
+
+    Paper Committee: Francesco Noferini, Manuel Colocci, Silvia Arcelli, Pietro Antonioli
+    Created : 2014-07-23
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Nature Physics 11 (2015) 811-814
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Nov 29, 2014 Round: 2 - Jan 24, 2015 Round: 3 - Jun 13, 2015
+
+Production of deuterons, tritons, 3
+He nuclei and their antinuclei in pp collisions at s√
+= 0.9, 2.76, and 7 TeV
+
+    Paper Committee: Eulogio Serradilla Rodriguez - Old member, Arturo Alejandro Menchaca-Rocha, Stefania Bufalino, Alexander Philipp Kalweit
+    Created : 2014-07-04
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 97 (2018) 024615
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Feb 25, 2015 Round: 2 - Sep 1, 2017
+
+Transverse momentum dependence of inclusive primary charged-particle production in pPb collisions at sqrt(sNN) = 5.02 TeV
+
+    Paper Committee: Anton Andronic, Jacek Tomasz Otwinowski, Michael Linus Knichel - Old member, Philipp Luettig - Old member
+    Created : 2014-03-10
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 74 (2014) 3054
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Apr 30, 2014
+
+Search for weakly decaying Λn¯
+and ΛΛ exotic bound states in central Pb-Pb collisions at sNN−−−√
+= 2.76 TeV
+
+    Paper Committee: Benjamin Donigus, Nicole Alice Martin - Old member, Peter Braun-Munzinger
+    Created : 2014-02-25
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 752 (2016) 267-277
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Nov 7, 2014 Round: 2 - Jan 23, 2015
+    Round: 4 - Oct 29, 2015
+    Round: 4 - Nov 8, 2015
+
+3ΛH
+and 3Λ¯H¯¯¯¯ production in Pb-Pb collisions at sNN−−−√
+= 2.76 TeV
+
+    Paper Committee: Ramona Lea, Paolo Camerini, Stefano Piano
+    Created : 2014-01-28
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 754 (2016) 360-372
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Feb 16, 2015 Round: 2 - Apr 26, 2015
+
+Production of light nuclei and anti-nuclei in pp and Pb-Pb collisions at LHC energies
+
+    Paper Committee: Natasha Sharma, Alexander Philipp Kalweit, Eulogio Serradilla Rodriguez - Old member, Helmut Oeschler - Old member
+    Created : 2013-10-31
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 93 (2015) 024917
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Sep 1, 2014 Round: 2 - Feb 10, 2015 Round: 3 - Jun 26, 2015
+
+Inclusive photon production at forward rapidities for proton-proton collisions in sqrt(s) = 0.9, 2.76 and 7 TeV
+
+    Paper Committee: Tapan Kumar Nayak, Sudipan De, Satyajit Jena - Old member, Sidharth Kumar Prasad
+    Created : 2013-10-22
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: EPJC 75 (2015) 146
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 8, 2014 Round: 2 - Oct 1, 2014
+    Round: 4 - Mar 9, 2015
+
+Production of charged pions, kaons and protons at large transverse momenta in pp and Pb–Pb collisions at sqrt(sNN) = 2.76 TeV
+
+    Paper Committee: Peter Christiansen, Antonio Ortiz Velasquez, Marian Ivanov, Xianguo Lu - Old member
+    Created : 2013-06-21
+    Status: Published (Round:7)  Publication link  arXiv 
+    Article reference: PLB 736 (2014) 196-207
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Nov 2, 2013Round: 2 - Dec 14, 2013Round: 4 - Mar 26, 2014Round: 5 - May 14, 2014
+
+Measurement of pion, kaon and proton production in proton-proton collisions at s√=7
+TeV
+
+    Paper Committee: Domenico Di Bari, Francesco Barile, Marek Chojnacki - Old member, Barbara Guerzoni - Old member, Martha Spyropoulou-Stassinaki
+    Created : 2013-06-10
+    Status: Published (Round:2)  Publication link  arXiv 
+    Article reference: EPJC 75 (2015) 226
+    Previous Collaboration reviews closed on:
+
+    Round: 0 - Jun 30, 2014 Round: 1 - Feb 9, 2015
+
+Production of Σ(1385)± and Ξ(1530)0 in proton-proton collisions at √s = 7 TeV
+
+    Paper Committee: Enrico Fragiacomo, Dhevan Raja Gangadharan
+    Created : 2013-05-13
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 75 (2015) 1
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 8, 2014 Round: 2 - Jun 10, 2014<\br>
+
+Multiplicity Dependence of Pion, Kaon, Proton and Lambda Production in p-Pb Collisions at sNN−−−√
+= 5.02 TeV
+
+    Paper Committee: Roberto Preghenella, Michele Floris - Old member, Jonas Anielski - Old member, Alexander Philipp Kalweit, David Dobrigkeit Chinellato
+    Created : 2013-05-03
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 728 (2014) 25-38
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 2, 2013Round: 2 - Jul 25, 2013
+
+K*(892)0 and phi(1020) production in Pb-Pb collisions at sqrt(s_NN) = 2.76 TeV
+
+    Paper Committee: Anders Garritt Knospe, Subhash Singha - Old member, Francesca Bellini, Christina Markert
+    Created : 2013-05-02
+    Status: Published (Round:7)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 91 (2015) 024609
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Dec 20, 2013Round: 2 - Mar 30, 2014
+
+
+Multiplicity dependence of the average transverse momentum in pp, p-Pb, and Pb-Pb collisions at the LHC
+
+    Paper Committee: Anton Andronic, Michael Linus Knichel - Old member, Kai Oliver Schweda, Philipp Luettig - Old member, Marco Marquard - Old member, Dariusz Czeslaw Miskowiec, Jacek Tomasz Otwinowski
+    Created : 2013-03-22
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 727 (2013) 371-380
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 18, 2013Round: 2 - Jul 3, 2013
+
+Energy Dependence of the Transverse Momentum Distributions of Charged Particles in pp Collisions with ALICE
+
+    Paper Committee: Henner Buesching, Philipp Luettig - Old member, Michael Linus Knichel - Old member, Jacek Tomasz Otwinowski
+    Created : 2012-11-07
+    Status: Published (Round:2)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 73 (2013) 2662
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - May 23, 2013Round: 2 - Jun 29, 2013
+
+Pseudorapidity density of charged particles in p-Pb collisions at sqrt(s) = 5.02 TeV
+
+    Paper Committee: Constantinos Loizides, Alberica Toia, Ruben Shahoyan, Cvetan Valeriev Cheshkov, Alexander Philipp Kalweit, Tim Schuster - Old member
+    Created : 2012-09-28
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 110 (2013) 032301
+
+Mid-rapidity anti-baryon to baryon ratios in pp collisions at s√
+= 0.9, 2.76 and 7 TeV measured by ALICE
+
+    Paper Committee: Michal Broz, Panagiotis Christakoglou, Ian Gardner Bearden
+    Created : 2012-06-25
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C 73 (2013) 2496
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Mar 28, 2013Round: 2 - May 4, 2013
+
+Centrality dependence of Pion, Kaon, and Proton Production in Pb-Pb Collisions at snn = 2.76 TeV
+
+    Paper Committee: Michele Floris - Old member, Leonardo Milano - Old member, Roberto Preghenella, Alexander Philipp Kalweit, Barbara Guerzoni - Old member, Marek Chojnacki - Old member
+    Created : 2012-06-21
+    Status: Published (Round:2)  Publication link  arXiv 
+    Article reference: Phys. Rev. C 88 (2013) 044910
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jan 16, 2013Round: 2 - Feb 16, 2013
+
+Centrality dependence of the pseudorapidity density distribution for charged particles in Pb-Pb collisions at √sNN = 2.76 TeV
+
+    Paper Committee: Kristjan Herlache Gulbrandsen, Cvetan Valeriev Cheshkov, Ruben Shahoyan, Jens Joergen Gaardhoeje
+    Created : 2012-03-28
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 726 (2013) 610-622
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Feb 1, 2013Round: 2 - Mar 23, 2013
+
+Nuclei and antinuclei production in pp and Pb–Pb collisions at LHC energies
+
+    Paper Committee: Natasha Sharma, Alexander Philipp Kalweit, Eulogio Serradilla Rodriguez - Old member, Helmut Oeschler - Old member
+    Created : 2012-02-17
+    Status: Withdrawn (Round:0)     
+
+Multi-strange baryon production at mid-rapidity in Pb-Pb collisions at √sNN = 2.76 TeV
+
+    Paper Committee: Domenico Elia, Maria Nicassio - Old member, Domenico Colella, Orlando Villalobos Baillie
+    Created : 2012-01-20
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 728 (2014) 216-227, Phys. Lett. B 734 (2014) 409-410 (erratum)
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Jul 2, 2013Round: 2 - Jul 20, 2013Round: 4 - May 16, 2014
+
+Centrality Dependence of Charged Particle Production at Large Transverse Momentum in Pb−
+Pb Collisions at sNN−−−−√=2.76
+TeV.
+
+    Paper Committee: Jacek Tomasz Otwinowski, Harald Appelshaeuser, Marco Van Leeuwen, Klaus Johannes Reygers, Michael Linus Knichel - Old member, Philipp Luettig - Old member, Marian Ivanov
+    Created : 2012-01-12
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 720 (2013) 52-62
+
+Pion, Kaon, and Proton Production in Central Pb-Pb Collisions at sqrt(sNN) = 2.76 TeV
+
+    Paper Committee: Michele Floris - Old member, Roberto Preghenella, Leonardo Milano - Old member, Marek Chojnacki - Old member, Alexander Philipp Kalweit, Barbara Guerzoni - Old member
+    Created : 2012-01-11
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 109 (2012) 252301
+
+Production of pi/K/p in pp collisions at 7 TeV
+
+    Paper Committee: Michele Floris - Old member, Luciano Ramello, Leonardo Milano - Old member, Roberto Preghenella, Alexander Philipp Kalweit, Marek Chojnacki - Old member, Barbara Guerzoni - Old member
+    Created : 2012-01-11
+    Status: Withdrawn (Round:0)     
+
+K0s and Lambda production in Pb–Pb collisions at sqrt(sNN)=2.76 TeV
+
+    Paper Committee: Iouri Belikov, Lee Stuart Barnby, David Dobrigkeit Chinellato, Luke David Hanratty - Old member, Simone Schuchmann - Old member
+    Created : 2011-12-14
+    Status: Published (Round:3)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 111 (2013) 222301
+    Previous Collaboration reviews closed on:
+
+    Round: 1 - Apr 27, 2013Round: 2 - Jul 20, 2013
+
+Production of K∗
+(892)0 and φ(1020) in pp collisions at s√=7
+TeV
+
+    Paper Committee: Angela Badala, Luciano Ramello, Roberto Preghenella, Enrico Fragiacomo
+    Created : 2011-12-14
+    Status: Published (Round:4)  Publication link  arXiv 
+    Article reference: Eur. Phys. J. C72 (2012) 2183
+
+Multi-strange baryon production in pp collisions at √s = 7 TeV with ALICE
+
+    Paper Committee: Betty Bezverkhny Abelev - Old member, David Dobrigkeit Chinellato, Peter Graham Jones, Jun Takahashi, Antonin Maire
+    Created : 2011-12-13
+    Status: Published (Round:5)  Publication link  arXiv 
+    Article reference: Phys. Lett. B 712 (2012) 309
+
+Centrality dependence of the charged-particle multiplicity density at mid-rapidity in Pb-Pb collisions at sNN−−−√
+= 2.76 TeV
+
+    Paper Committee: Constantinos Loizides, Maria Nicassio - Old member, Domenico Elia, Michele Floris - Old member
+    Created : 2011-10-12
+    Status: Published (Round:0)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 106 (2011) 032301
+
+Charged-particle multiplicity density at mid-rapidity in central Pb-Pb collisions at sNN−−−√
+= 2.76 TeV
+
+    Paper Committee: Constantinos Loizides, Maria Nicassio - Old member, Domenico Elia, Michele Floris - Old member
+    Created : 2011-10-12
+    Status: Published (Round:0)  Publication link  arXiv 
+    Article reference: Phys. Rev. Lett. 105 (2010) 252301

@@ -52,6 +52,9 @@ def main(hyperloop_train,
                 x = trend.GetXaxis().GetBinCenter(bin_filled)
                 graphs["skipped"].AddPoint(x, 1)
                 continue
+            if not j.has_in_file(i):
+                alt_name = "perf-k0s-resolution/K0sResolution/h2_masspT"
+                j.get_as(alt_name, i)
             if draw_every_run:
                 j.get(i)
                 x_range = None
@@ -65,7 +68,7 @@ def main(hyperloop_train,
                     draw_opt = object_config["draw_opt"]
                 if "x_range" in object_config:
                     j.draw(i, x_range=x_range, y_range=y_range, opt=draw_opt)
-                input(f"Run {j.get_run()}\nPress enter to continue")
+                input(f"Plotting run {j.get_run()} press enter to continue")
             j.fill_histo(trend, i, object_config["what_to_do"], object_config)
         # Computing average
         average = []
@@ -163,6 +166,9 @@ def main(hyperloop_train,
                 extra_label.Draw()
             can_vs_rate.Modified()
             can_vs_rate.Update()
+            input("Press enter to continue (before save)")
+            can_vs_rate.SaveAs("/tmp/trend_vs_rate" + i.replace("/", "_") + ".png")
+            can_vs_rate.SaveAs("/tmp/trend_vs_rate" + i.replace("/", "_") + ".pdf")
     input("Press enter to continue")
 
 
@@ -184,8 +190,13 @@ if __name__ == "__main__":
     parser.add_argument("--label", "-l",
                         help="Download the output (to be ran on the first time only)",
                         default="")
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="Increase verbosity")
 
     args = parser.parse_args()
+    if args.verbose:
+        download_hyperloop_per_run.set_verbose_mode()
+
     for i in args.hyperloop_train_ids:
         main(i,
              label=args.label,

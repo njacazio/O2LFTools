@@ -6,30 +6,40 @@ It can be used by providing the path on alien of the merged results.
 Example usage: `./download_per_run.py TRAIN_ID`
 """
 
-import subprocess
-from os import path
 import os
-import json
-import argparse
 try:
     from ROOT import TFile, TH1, TF1, TLatex, gMinuit, TNamed
     import ROOT
 except:
     raise Exception("Cannot find ROOT, are you in a ROOT enviroment?")
 from multiprocessing import Pool
+
 try:
     import tqdm
 except ImportError as e:
     print("Module tqdm is not imported.",
           "Progress bar will not be available (you can install tqdm for the progress bar) `pip3 install --user tqdm`")
 
-import sys
-import inspect
 from utils import draw_nice_canvas, draw_nice_frame
 
 # Modes
 VERBOSE_MODE = False
+
+
+def set_verbose_mode():
+    global VERBOSE_MODE
+    VERBOSE_MODE = True
+    print("Turning on verbose mode")
+
+
 DRY_MODE_RUNNING = False
+
+
+def set_dry_mode():
+    global DRY_MODE_RUNNING
+    DRY_MODE_RUNNING = True
+    print("Turning on dry mode")
+
 
 labels_drawn = []
 
@@ -90,6 +100,8 @@ def run_cmd(cmd, print_output=True):
     if DRY_MODE_RUNNING:
         msg("Dry mode!!!")
         return
+    import subprocess
+    import inspect
     if "capture_output" in inspect.signature(subprocess.run).parameters:
         # Python 3.7+
         run_result = subprocess.run(cmd, capture_output=True)
@@ -112,7 +124,7 @@ class HyperloopOutput:
                  full_json=None,
                  out_path="/tmp/"):
 
-        self.out_path = path.abspath(out_path)
+        self.out_path = os.path.abspath(out_path)
 
         def get(key):
             if key in json_entry:
@@ -215,9 +227,9 @@ class HyperloopOutput:
         if self.alien_path_analysis_results() is None:
             return None
         in_path = self.alien_path_analysis_results()
-        file_name = path.basename(in_path)
-        dir_name = path.dirname(in_path)
-        target_output_file = path.join(self.out_path, dir_name.strip("/"), file_name)
+        file_name = os.path.basename(in_path)
+        dir_name = os.path.dirname(in_path)
+        target_output_file = os.path.join(self.out_path, dir_name.strip("/"), file_name)
         if self.merge_state == "partially_merged":
             if "Stage" not in target_output_file:
                 fatal_msg("Cannot find Stage in", target_output_file)
@@ -232,7 +244,7 @@ class HyperloopOutput:
 
     def exists(self):
         f = self.out_filename()
-        check = path.isfile(f)
+        check = os.path.isfile(f)
         if check:
             vmsg("File", f"`{f}`", "already existing")
             return True
@@ -249,6 +261,11 @@ class HyperloopOutput:
             if throw_fatal:
                 fatal_msg("Cannot open", f)
             return False
+        # Check that the size is the same
+        alien_size = self.get_alien_file_size()
+        local_size = os.path.getsize(f)
+        if abs(alien_size - local_size) > 1000:
+            return False
         vmsg("File", f"`{f}`", "is sane")
         return True
 
@@ -261,6 +278,19 @@ class HyperloopOutput:
     def __repr__(self) -> str:
         return self.__str__()
 
+    def get_alien_file_size(self):
+        cmd = f"alien_stat {self.get_alien_path()}"
+        out = run_cmd(cmd)
+        out = out.stdout.decode('ascii')
+        s = None
+        for i in out.split("\n"):
+            if "Size" in i:
+                s = int(i.split(" ")[1])
+                break
+        return s
+        print("Size", s, "bytes", s/1024/1024/1024, "GB")
+        raise ValueError("Not implemented")
+
     def copy_from_alien(self,
                         write_download_summary=True,
                         overwrite=False,
@@ -268,14 +298,14 @@ class HyperloopOutput:
         if self.out_filename() is None:
             wmsg("Output filename is None, skipping download")
             return None
-        out_path = path.dirname(self.out_filename())
-        if not path.isdir(out_path):
+        out_path = os.path.dirname(self.out_filename())
+        if not os.path.isdir(out_path):
             vmsg("Preparing directory", f"`{out_path}`")
             os.makedirs(out_path)
         else:
             vmsg("Directory", f"`{out_path}`", "already present")
-        if write_download_summary and (overwrite_summary or not path.isfile(path.join(out_path, "download_summary.txt"))):
-            with open(path.join(out_path, "download_summary.txt"), "w") as f:
+        if write_download_summary and (overwrite_summary or not os.path.isfile(os.path.join(out_path, "download_summary.txt"))):
+            with open(os.path.join(out_path, "download_summary.txt"), "w") as f:
                 f.write(self.get_alien_path() + "\n")
                 f.write(f"Run{self.get_run()}\n")
                 f.write(f"Period{self.get_dataset_name()}\n")
@@ -305,6 +335,11 @@ class HyperloopOutput:
             self.tfile = TFile(self.out_filename())
         return self.tfile
 
+    def has_in_file(self, name):
+        if self.open().Get(name):
+            return True
+        return False
+
     def get(self, name=None):
         if name in self.root_objects:
             return self.root_objects[name]
@@ -321,8 +356,16 @@ class HyperloopOutput:
                     obj = obj.Get(i)
                 if not obj:
                     f.ls()
+                    if "/" in name:
+                        split_names = name.split("/")
+                        partial_name = split_names.pop(0)
+                        print(f"Looking for content in {partial_name}")
+                        f.Get(partial_name).ls()
+                        for j in split_names:
+                            partial_name += f"/{j}"
+                            print(f"Looking for {partial_name}")
+                            f.Get(partial_name).ls()
                     raise ValueError(f"{name} not found")
-
         else:
             obj = f.Get(name)
         if "Direc" in obj.ClassName():
@@ -337,6 +380,12 @@ class HyperloopOutput:
             #     obj.SetTitle(t)
         self.root_objects[name] = obj
         return obj
+
+    def get_as(self, name, alias):
+        if alias in self.root_objects:
+            return self.root_objects[alias]
+        self.root_objects[alias] = self.get(name)
+        return self.get(alias)
 
     def average(self, name):
         h = self.get(name)
@@ -390,13 +439,14 @@ class HyperloopOutput:
             # print(fun.GetParameter(i[0]))
         # fun.Print()
         # for strat in [3]:
+        h.Fit(fun, "QNR")
         for strat in [0, 1, 2, 3]:
             ROOT.Math.MinimizerOptions().SetStrategy(strat)
             h.Fit(fun, option["fit_opt"], "", *fitrange)
         fit_converged = gMinuit and gMinuit.fCstatu and ("CONVERGED" in gMinuit.fCstatu or "OK" in gMinuit.fCstatu)
         if not fit_converged:
             # print("Fit in pT", "with strategy", strategy, "did not converge -> ", st)
-            print("Fit did not converge", gMinuit, gMinuit.fCstatu)
+            wmsg("Fit did not converge", gMinuit, gMinuit.fCstatu, "with strategy", strat)
 
         if (type(option["show_single_fit"]) is str and option["show_single_fit"] == "true") or (type(option["show_single_fit"]) is not str and option["show_single_fit"]):
             can = draw_nice_canvas("fit_canvas", replace=False)
@@ -410,7 +460,7 @@ class HyperloopOutput:
             draw_label(f"Run {self.get_run()}", 0.25, 0.85)
             can.Modified()
             can.Update()
-            input("Press enter to continue")
+            # input("Press enter to continue")
         return fun.GetParameter(int(option["parameterindex"])), fun.GetParError(int(option["parameterindex"])), extra
 
     def draw(self, name, x_range=None, y_range=None, opt=""):
@@ -429,6 +479,7 @@ class HyperloopOutput:
             opt += "same"
         if "TH" in h.ClassName():
             obj = h.DrawCopy(opt)
+            obj.SetDirectory(0)
         else:
             obj = h.DrawClone(opt)
         if f"{self.get_run()}" not in obj.GetTitle():
@@ -439,21 +490,22 @@ class HyperloopOutput:
         drawn_objects.append(obj)
         can.Update()
         can.Modified()
+        vmsg("Drawn", name, "for run", self.get_run(), "x_range", x_range, "y_range", y_range)
         return can
 
-    def fill_histo(self, h, name, quantity="mean", option=None):
+    def fill_histo(self, h_trending, name, quantity="mean", option=None):
         """
-        This function fills the histogram h with the quantity specified of the object asked.
+        This function fills the histogram h_trending with the quantity specified of the object asked.
         """
         x = f"{self.get_run()}"
-        ib = int(h.GetEntries()) + 1
-        if h.GetXaxis().GetTitle() == "":
-            h.SetBit(TH1.kNoStats)
-            h.GetXaxis().SetTitle("Run number")
+        ib = int(h_trending.GetEntries()) + 1
+        if h_trending.GetXaxis().GetTitle() == "":
+            h_trending.SetBit(TH1.kNoStats)
+            h_trending.GetXaxis().SetTitle("Run number")
         ytitle = None
-        if h.GetYaxis().GetTitle() == "":
+        if h_trending.GetYaxis().GetTitle() == "" and quantity is not None:
             ytitle = self.get(name).GetTitle()
-        h.GetXaxis().SetBinLabel(ib, x)
+        h_trending.GetXaxis().SetBinLabel(ib, x)
         if quantity is None:
             y = 0
             ye = 0
@@ -464,7 +516,7 @@ class HyperloopOutput:
             y, ye = self.average(name)
         elif quantity == "valueat1":
             if ytitle is not None:
-                ytitle = f"Value at 1" + h.GetXaxis().GetTitle()
+                ytitle = f"Value at 1" + h_trending.GetXaxis().GetTitle()
             y, ye = self.valueat1(name)
         elif quantity == "functionfit":
             if ytitle is not None:
@@ -474,11 +526,11 @@ class HyperloopOutput:
             raise ValueError(f"Quantity {quantity} not recognized")
 
         if ytitle is not None:
-            h.GetYaxis().SetTitle(ytitle)
-        h.SetBinContent(ib, y)
-        h.SetBinError(ib, ye)
+            h_trending.GetYaxis().SetTitle(ytitle)
+        h_trending.SetBinContent(ib, y)
+        h_trending.SetBinError(ib, ye)
         if extra is not None:
-            h.GetListOfFunctions().Add(extra)
+            h_trending.GetListOfFunctions().Add(extra)
         return ib
 
     def __lt__(self, other):
@@ -491,16 +543,17 @@ def get_run_per_run_files(train_id=126264,
                           list_merged_files=False,
                           key_file="/tmp/tokenkey_1000.pem",
                           cert_file="/tmp/tokencert_1000.pem"):
-    out_name = path.join(out_path, f"HyperloopID_{train_id}.json")
-    if not path.isfile(key_file):
+    out_name = os.path.join(out_path, f"HyperloopID_{train_id}.json")
+    if not os.path.isfile(key_file):
         fatal_msg("Cannot find key file", key_file)
-    if not path.isfile(cert_file):
+    if not os.path.isfile(cert_file):
         fatal_msg("Cannot find cert file", cert_file)
-    if not path.isfile(out_name):
+    if not os.path.isfile(out_name):
         download_cmd = f"curl --key {key_file} --cert {cert_file} --insecure {alien_path}{train_id} -o {out_name}"
         run_cmd(download_cmd)
     sub_file_list = []
     with open(out_name) as json_data:
+        import json
         data = json.load(json_data)
         key = "mergeResults" if list_merged_files else "jobResults"
         if key not in data:
@@ -529,14 +582,14 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
                              cert_file="/tmp/tokencert_1000.pem",
                              list_derived_data=False):
     # Getting input for single
-    l = get_run_per_run_files(train_id=hyperloop_train_id,
-                              out_path=out_path,
-                              list_merged_files=download_merged,
-                              key_file=key_file,
-                              cert_file=cert_file)
+    list_of_hl_output = get_run_per_run_files(train_id=hyperloop_train_id,
+                                              out_path=out_path,
+                                              list_merged_files=download_merged,
+                                              key_file=key_file,
+                                              cert_file=cert_file)
     if list_derived_data:
         total_list = []
-        for i in l:
+        for i in list_of_hl_output:
             total_list.append(i.find_derived_data())
         print(total_list)
         with open("/tmp/list_of_derived_data.txt", "w") as f:
@@ -548,8 +601,8 @@ def process_one_hyperloop_id(hyperloop_train_id=126264,
     downloaded = []
     if jobs > 1:
         with Pool() as pool:
-            pool.map(download_file, l)
-    for i in tqdm.tqdm(l, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
+            pool.map(download_file, list_of_hl_output)
+    for i in tqdm.tqdm(list_of_hl_output, bar_format='{l_bar}{bar:10}{r_bar}{bar:-10b}'):
         d = i.copy_from_alien(overwrite=overwrite)
         if d is None:
             continue
@@ -562,6 +615,7 @@ def main():
     global VERBOSE_MODE
     global DRY_MODE_RUNNING
 
+    import argparse
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("hyperloop_train_ids",
                         help="Train ID to consider",
@@ -600,10 +654,9 @@ def main():
                         help="List the derived data produced by an hyperloop train")
     args = parser.parse_args()
     if args.verbose:
-        VERBOSE_MODE = True
-        print("Turning on verbose mode")
+        set_verbose_mode()
     if args.drymode:
-        DRY_MODE_RUNNING = True
+        set_dry_mode()
 
     files_downloaded = []
     for i in args.hyperloop_train_ids:

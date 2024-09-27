@@ -60,6 +60,7 @@ def extract_time(logfile="logtmp_3047049637.txt"):
         if "Launching task: ${O2_ROOT}/bin/o2-sim -e TGeant4 --skipModules ZDC" in i:
             events = i
             break
+    print(events)
     if events is None:
         print("Found no events!")
         return None, None
@@ -74,18 +75,56 @@ def extract_time(logfile="logtmp_3047049637.txt"):
     return sum(times), events
 
 
+def extract_time_pipeline(logfile="pipeline_action.txt"):
+    events = 10
+    with open(logfile) as f:
+        lines = f.readlines()
+        times = []
+        for i in lines:
+            if "global_runtime" not in i:
+                continue
+            times.append(i.split("global_runtime : ")[1].strip().strip("s"))
+            times[-1] = float(times[-1])
+    return sum(times), events
+
+
 # extract_time()
 
 
-def main(alien_path="/alice/cern.ch/user/n/njacazio/selfjobs/NucleiTest_-20240326-192013",
-         target_events=250000,
-         parallel_workers=8):
-    results = run_cmd("alien_find alien://"+alien_path+"/*/logtmp*", print_output=False)
+def main(alien_path=None,
+         target_events=5e6,
+         parallel_workers=8,
+         log_file_type="pipeline_action"):
+    if alien_path is None:
+        print("List of MCs to check")
+        run_cmd("alien_ls selfjobs")
+        return
+
+    # Get the home
+    alien_home = run_cmd("alien_home", print_output=False)
+    alien_home = alien_home.stdout.decode('ascii').strip()
+    print("Alien home", alien_home)
+    if not alien_path.startswith("selfjobs"):
+        alien_path = "selfjobs/"+alien_path
+    if not alien_path.startswith("/alice"):
+        alien_path = alien_home + alien_path
+    results = run_cmd("alien_find alien://"+alien_path+"/*/"+log_file_type+"*", print_output=False)
+    # Check how many hits
+    log_files_found = []
+    for i in results.stdout.decode('ascii').split("\n"):
+        if log_file_type not in i:
+            continue
+        log_files_found.append(i)
+
+    if len(log_files_found) == 0:
+        print("No logs found")
+        return
+
     import os
     os.makedirs("/tmp/runlogs/", exist_ok=True)
     files = []
     aods = {}
-    for i in results.stdout.decode('ascii').split("\n"):
+    for i in log_files_found:
         print(i)
         if i == "":
             continue
@@ -124,7 +163,10 @@ def main(alien_path="/alice/cern.ch/user/n/njacazio/selfjobs/NucleiTest_-2024032
     total_time = 0.0
     n_jobs = 0
     for i in files:
-        t, e = extract_time(i)
+        if "pipeline_action" in log_file_type:
+            t, e = extract_time_pipeline(i)
+        else:
+            t, e = extract_time(i)
         if t is None:
             continue
         total_time += t
@@ -132,12 +174,41 @@ def main(alien_path="/alice/cern.ch/user/n/njacazio/selfjobs/NucleiTest_-2024032
         n_jobs += 1
     total_time_per_event = total_time/total_events
     print("In total", total_events, "events in", total_time, "seconds. Time per event", total_time_per_event, "seconds")
+    print("*****")
+    print(f"{target_events} target events, {target_events/1e6} M", )
+    print("*****")
     target_time = total_time_per_event*target_events
-    target_time_days = target_time/(24*60*60)
+    seconds_in_day = 24*60*60
+
+    target_time_days = target_time/(seconds_in_day)
     print("Expected time", target_time, "seconds", target_time_days, "days")
-    print("Total time per event", total_time_per_event*target_events*parallel_workers*n_jobs/10000/(24*60*60), "days at 10k CPUs")
+    print("Total time per event", total_time_per_event*target_events/parallel_workers*n_jobs/10000/(seconds_in_day), "days at 10k CPUs")
     target_size = sum(sizes) / total_events * target_events
     print("Expected size", target_size/1e6, "MB", target_size/1e9, "GB", target_size/1e12, "TB")
+    print(" ")
+    typical_days_at10kcpu_per_event_pbpb = 152/1e8
+    print("Typical time per event", typical_days_at10kcpu_per_event_pbpb, "days for PbPb ->",
+          target_events*typical_days_at10kcpu_per_event_pbpb,
+          "days at 10k CPUs")
+    typical_days_at10kcpu_per_event_pp = 4/1e8
+    print("Typical time per event", typical_days_at10kcpu_per_event_pp, "days for pp ->",
+          target_events*typical_days_at10kcpu_per_event_pp,
+          "days at 10k CPUs")
 
 
-main()
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Fetch MC resources and estimate time')
+    parser.add_argument('--alien_path', "-a", type=str, default=None,
+                        help='Alien path to the logs')
+    parser.add_argument('--target_events', "-e", type=float, default=5e6,
+                        help='Target number of events')
+    parser.add_argument('--parallel_workers', "-p", type=int, default=8,
+                        help='Number of parallel workers')
+    parser.add_argument('--logfile', "-l", choices=["pipeline_action", "logtmp"], default="pipeline_action",
+                        help='Number of parallel workers')
+    args = parser.parse_args()
+    main(alien_path=args.alien_path,
+         target_events=args.target_events,
+         parallel_workers=args.parallel_workers,
+         log_file_type=args.logfile)

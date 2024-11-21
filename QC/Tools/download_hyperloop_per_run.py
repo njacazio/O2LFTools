@@ -531,6 +531,11 @@ class HyperloopOutput:
             can = draw_nice_canvas("fit_canvas", replace=False)
             h.SetBit(TH1.kNoStats)
             h.SetBit(TH1.kNoTitle)
+            show_single_fit_range = option["show_single_fit_range"]
+            if show_single_fit_range is not None:
+                show_single_fit_range = show_single_fit_range.split(", ")
+                show_single_fit_range = [float(i) for i in show_single_fit_range]
+                h.GetXaxis().SetRangeUser(show_single_fit_range[0], show_single_fit_range[1])
             h.Draw()
             fun.Draw("same")
             if projection_interval is not None:
@@ -539,7 +544,7 @@ class HyperloopOutput:
             draw_label(f"Run {self.get_run()}", 0.25, 0.85)
             can.Modified()
             can.Update()
-            # input("Press enter to continue")
+            input("Press enter to continue")
         parameter_index = int(option["parameterindex"])
         print("Getting the input parameter", parameter_index, fun.GetParName(parameter_index))
         return fun.GetParameter(parameter_index), fun.GetParError(parameter_index), extra

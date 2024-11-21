@@ -25,6 +25,10 @@ def main(hyperloop_train,
          label=""):
     global trend_calls
     trend_calls += 1
+    import os
+    if not os.path.exists(input_configuration):
+        raise ValueError(f"Configuration file {input_configuration} does not exist")
+    print("Using trending configuration", input_configuration)
     parser = configparser.ConfigParser()
     parser.read(input_configuration)
     if do_download:
@@ -66,8 +70,7 @@ def main(hyperloop_train,
                     y_range = object_config["y_range"].split(", ")
                 if "draw_opt" in object_config:
                     draw_opt = object_config["draw_opt"]
-                if "x_range" in object_config:
-                    j.draw(i, x_range=x_range, y_range=y_range, opt=draw_opt)
+                j.draw(i, x_range=x_range, y_range=y_range, opt=draw_opt)
                 input(f"Plotting run {j.get_run()} press enter to continue")
             j.fill_histo(trend, i, object_config["what_to_do"], object_config)
         # Computing average
@@ -82,14 +85,16 @@ def main(hyperloop_train,
             ye = trend.GetBinError(j)
             run_number = int(trend.GetXaxis().GetBinLabel(j))
             average.append(y)
-            thr = float(object_config["maximum_threshold"])
-            if y > thr:
-                graphs["high"].AddPoint(x, thr)
-                run_counters["high"].append(run_number)
-            thr = float(object_config["minimum_threshold"])
-            if y < thr:
-                graphs["low"].AddPoint(x, thr)
-                run_counters["low"].append(run_number)
+            if object_config["maximum_threshold"] != "None":
+                thr = float(object_config["maximum_threshold"])
+                if y > thr:
+                    graphs["high"].AddPoint(x, thr)
+                    run_counters["high"].append(run_number)
+            if object_config["minimum_threshold"] != "None":
+                thr = float(object_config["minimum_threshold"])
+                if y < thr:
+                    graphs["low"].AddPoint(x, thr)
+                    run_counters["low"].append(run_number)
             if run_number in rates:
                 graph_vs_rate.AddPoint(rates[run_number], y)
                 coordinates_vs_rate_per_run[run_number] = [rates[run_number], y]
@@ -117,10 +122,10 @@ def main(hyperloop_train,
             run_counters["skipped"].append(j)
         can = draw_nice_canvas("trend" + i, extend_right=True, replace=False)
         extra_label = None
+        trend.Draw("same")
         if can.GetListOfPrimitives().GetEntries() == 0:
             if trend.GetListOfFunctions().GetEntries() > 0:
                 extra_label = draw_label(trend.GetListOfFunctions()[0].GetTitle(), align=33, x=0.92, y=0.90)
-        trend.Draw("same")
         trend_objects.append(trend)
 
         colours = {"skipped": "#e41a1c", "low": "#377eb8", "high": "#4daf4a"}
@@ -142,7 +147,7 @@ def main(hyperloop_train,
         for j in run_counters:
             print(j, run_counters[j])
         can.SaveAs("/tmp/trend" + i.replace("/", "_") + ".png")
-        if 1:
+        if 0:
             graph_vs_rate.GetYaxis().SetTitle(trend.GetYaxis().GetTitle())
             can_vs_rate = draw_nice_canvas("trend_vs_rate" + i, extend_right=True, replace=False)
             if can_vs_rate.GetListOfPrimitives().GetEntries() == 0:

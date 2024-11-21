@@ -7,8 +7,7 @@ from sys import argv
 import sys
 if 1:
     sys.path.append('../../PerformancePlots/')
-    from utils import draw_nice_canvas, draw_nice_frame, draw_nice_label, transpose_th2, getfromfile, update_all_canvases
-from numpy import sqrt
+    from utils import draw_nice_canvas, draw_nice_frame, getfromfile, update_all_canvases
 
 
 def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma_AllPIDs.root",
@@ -16,20 +15,27 @@ def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma_AllPIDs.root",
                     "/tmp/perf-k0s-resolution_h2_masspTsigma_yesTOF.root"],
          tags=["Standard", "Pion PID", "Daughter with TOF"]):
 
-    canvases = []
+    input_objects = []
     for i in filenames:
-        canvases.append(getfromfile(i, 0))
-        canvases[-1].SetName(i)
+        input_objects.append(getfromfile(i, 0))
+        input_objects[-1].SetName(i)
 
-    colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999']
+    colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf']
+    if len(filenames) < 8:
+        colors = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628']
+    colors.append('#999999')
     can = draw_nice_canvas("comparison")
     leg = TLegend(0.2, 0.66, 0.7, 0.81)
     per_tag = {}
     frame = None
-    for i in canvases:
+    for i in input_objects:
         t = tags.pop(0)
         per_tag[t] = []
-        for j in i.GetListOfPrimitives():
+        if "TGraph" in i.ClassName():
+            objects_to_draw = [i]
+        else:
+            objects_to_draw = i.GetListOfPrimitives()
+        for j in objects_to_draw:
             if "TGraph" not in j.ClassName():
                 continue
             if can.GetListOfPrimitives().GetSize() == 0:
@@ -47,15 +53,19 @@ def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma_AllPIDs.root",
             j.SetMarkerSize(0.5)
             j.SetTitle(j.GetTitle() + f" ({t})")
             j = j.DrawClone("LPSAME")
+            print("Drawing", j)
             per_tag[t].append(j)
             leg.AddEntry(j)
     leg.Draw()
+
+    print(per_tag)
 
     can = draw_nice_canvas("ratio")
     legratio = TLegend(0.2, 0.66, 0.7, 0.81)
     frame_ratio = frame.DrawCopy()
     frame_ratio.GetYaxis().SetTitle("Ratio")
     frame_ratio.GetYaxis().SetRangeUser(0.5, 1.5)
+    frame_ratio.GetYaxis().SetRangeUser(0., 10)
     firsttag = list(per_tag.keys())[0]
     for i in per_tag:
         if i == firsttag:
@@ -66,10 +76,26 @@ def main(filenames=["/tmp/perf-k0s-resolution_h2_masspTsigma_AllPIDs.root",
             legratio.AddEntry(j)
             for k in range(j.GetN()):
                 x = j.GetX()[k]
-                j.SetPoint(k, x, j.GetY()[k] / per_tag[firsttag][idx].Eval(x))
+                reference = per_tag[firsttag][idx].Eval(x)
+                if reference <= 0:
+                    print("Warnning, reference is 0 for tag", f"'{firsttag}'")
+                    continue
+                j.SetPoint(k, x, j.GetY()[k] / reference)
     legratio.Draw()
 
     update_all_canvases()
 
 
-main()
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description='Compare different files and do ratios')
+    parser.add_argument('filenames', metavar='F', type=str, nargs='+',
+                        help='Files to compare')
+    parser.add_argument('--tags', "-t", metavar='T', type=str, nargs='+',
+                        default=None,
+                        help='Tags for the files')
+    args = parser.parse_args()
+    tags = args.tags
+    if tags is None:
+        tags = [i.split("_masspT")[-1].strip("_").strip(".root") for i in args.filenames]
+    main(args.filenames, tags)

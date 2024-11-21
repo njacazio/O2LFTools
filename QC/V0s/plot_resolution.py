@@ -13,12 +13,17 @@ from numpy import sqrt
 
 def process_one_file(filename,
                      tag=None,
-                     extralabel=None):
+                     extralabel=None,
+                     save=True):
     print("processing file", filename,
           "tag", tag,
           "extralabel", extralabel)
     # Normalization
     normalization = getfromfile(filename, "event-selection-task/hColCounterAcc").GetEntries()
+    if extralabel is not None:
+        normalization = getfromfile(filename, f"perf-k0s-resolution{extralabel}/K0sResolution/h1_stats").GetEntries()
+    else:
+        normalization = getfromfile(filename, "perf-k0s-resolution/K0sResolution/h1_stats").GetEntries()
     histograms = {}
     if "NOTRD" in filename:
         # histograms["perf-k0s-resolution/thn_mass"] = None
@@ -28,6 +33,8 @@ def process_one_file(filename,
         histograms["perf-k0s-resolution/h2_masspT"] = None
     alternatives = {}
     alternatives["perf-k0s-resolution/h2_masspT"] = ["perf-k0s-resolution/K0sResolution/h2_masspT"]
+    if extralabel is not None:
+        alternatives[f"perf-k0s-resolution{extralabel}/h2_masspT"] = [f"perf-k0s-resolution{extralabel}/K0sResolution/h2_masspT"]
     alternatives["perf-k0s-resolution_yesTOF/h2_masspT"] = ["perf-k0s-resolution_yesTOF/K0sResolution/h2_masspT"]
     alternatives["perf-k0s-resolution_noTOF/h2_masspT"] = ["perf-k0s-resolution_noTOF/K0sResolution/h2_masspT"]
     alternatives["perf-k0s-resolution_noTRD/h2_masspT"] = ["perf-k0s-resolution_noTRD/K0sResolution/h2_masspT"]
@@ -173,6 +180,14 @@ def process_one_file(filename,
         can.Update()
         can = draw_nice_canvas(i+"vsSigma", replace=False)
         g_sigma.Draw("ALP")
+        if save:
+            out_filename = filename.replace("/", "_").replace(".root", "_"+i.replace("/", "_")).strip("_")
+            out_filename = "/tmp/"+out_filename
+            if extralabel is not None:
+                out_filename = out_filename+extralabel
+            g_mean.Clone("mean").SaveAs(out_filename+"mean.root")
+            g_sigma.Clone("sigma").SaveAs(out_filename+"sigma.root")
+            g_yield.Clone("yield").SaveAs(out_filename+"yield.root")
     return graphs
 
 
@@ -192,14 +207,17 @@ def main(filenames,
                "/tmp/NOTRD.root": "LHC23k6d (no TRD)",
                "156569": "LHC23k6d",
                "156999": "LHC22o_pass5_skimmed_QC1",
-               "/tmp/K0Perf.root": "LHC23k6_TRDfix",
+               "168513": "LHC23k6_TRDfix",
                "hy_338209": "LHC23zs_pass3_covMatrix",
+               "185780": "LHC23zs_pass3_covMatrix, tracking fixed",
                "hy_338195": "LHC23zs_pass3_QC1",
+               "hy_351738": "LHC23zs_pass3_covMatrix_errs",
                "/tmp/AnalysisResults.root": "LHC23zs_pass3_covMatrix"},
          only={"150642": "19415",
                "150796": "asd",
                "151351": "19551",
-               "152893": "asd"}):
+               "152893": "asd"},
+         savetag=""):
     results = []
     print(filenames)
     for i in enumerate(filenames):
@@ -221,12 +239,12 @@ def main(filenames,
     legs = []
     canvases = []
     for i in results[0]:
-        range_x = [0, 10]
+        range_x = [0, 4]
         if "VsRadius" in i:
             range_x = [0, 50]
-        range_y = [0, 0.05]
+        range_y = [0, 0.01]
         if i.endswith("mean"):
-            range_y = [0.49, 0.52]
+            range_y = [0.492, 0.5]
 
         can = draw_nice_canvas(i.replace("/", "_"))
         canvases.append(can)
@@ -293,7 +311,7 @@ def main(filenames,
             outname = save_path+"/"+i.GetName()
             if extra_label is not None:
                 outname += extra_label
-            i.SaveAs(outname+".root")
+            i.SaveAs(outname+savetag+".root")
 
 
 if __name__ == "__main__":
@@ -305,7 +323,14 @@ if __name__ == "__main__":
                         help='Save as')
     parser.add_argument('--extralabel', "-e", type=str, default=None,
                         help='Extra label')
+    parser.add_argument('--savetag', "-S", type=str, default="",
+                        help='Save tag')
+    parser.add_argument("--background", "-b", action="store_true")
     args = parser.parse_args()
+    from ROOT import gROOT
+    if args.background:
+        gROOT.SetBatch(True)
     main(filenames=args.filenames,
          extra_label=args.extralabel,
-         save_path=args.save_path)
+         save_path=args.save_path,
+         savetag=args.savetag)

@@ -595,7 +595,11 @@ class HyperloopOutput:
         extra = None
         y = 0
         ye = 0
-        if quantity == "mean":
+        if quantity is None:
+            y = 0
+            ye = 0
+            ytitle = "None"
+        elif quantity == "mean":
             if ytitle is not None:
                 ytitle = f"<{ytitle}>"
             y, ye = self.average(name)
